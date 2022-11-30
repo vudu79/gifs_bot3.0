@@ -1,0 +1,228 @@
+import random
+import re
+from aiogram import Router, types
+from aiogram.dispatcher.filters.callback_data import CallbackData
+from aiogram.dispatcher.filters.text import Text
+from aiogram.dispatcher.fsm.context import FSMContext
+from aiogram.dispatcher.fsm.state import StatesGroup, State
+from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from bot import bot, get_stickers
+from keyboards import reply_keyboard_stickers
+from utils import get_pagination_list
+
+
+class FSMSearch(StatesGroup):
+    subj = State()
+    limit = State()
+
+
+class FSMStickersRandom(StatesGroup):
+    count = State()
+
+
+class FSMStickersSearch(StatesGroup):
+    word = State()
+    count = State()
+
+
+# class StickersPaginateCallback(CallbackData, prefix="my"):
+#     filter: str
+#     start: int
+#     end: int
+#     focus: bool
+
+
+stickers_paginate_callback = CallbackData('action', 'start_end')
+
+gifs = dict()
+storage = MemoryStorage()
+leng_type = ""
+leng_phrase = ""
+
+router = Router()
+
+
+@router.message(Text(equals="Стикеры", ignore_case=False), state=None)
+async def stickers_menu_show_handler(message: Message):
+    # await bot.send_message(message.from_user.id,
+    #                        "Более 10000 открыток на праздники!!!",
+    #                        reply_markup=InlineKeyboardMarkup(row_width=2).row(
+    #                            InlineKeyboardButton(text="Сегодня", callback_data="holiday__today_"),
+    #                            InlineKeyboardButton(text="Календарь", callback_data="holiday__calendar_")))
+    # await message.delete_reply_markup()
+    await bot.send_message(message.from_user.id,
+                           "Более 25000 стикер-паков!!! Найти бы только нужный((",
+                           reply_markup=reply_keyboard_stickers)
+
+
+@router.message(Text(equals="Случайные паки", ignore_case=False), state=None)
+async def stickers_random_handler(message: Message, state: FSMContext):
+    await message.answer("Сколько паков найти?")
+    await state.set_state(FSMStickersRandom.count)
+
+
+@router.message(Text(equals="Поиск по словам", ignore_case=False), state=None)
+async def stickers_search_handler(message: Message, state: FSMContext):
+    await message.answer("Введите слово или фразу для поиска (ru/en)...")
+    await state.set_state(FSMStickersSearch.word)
+
+
+@router.message(Text(equals="Показать все", ignore_case=False))
+async def show_all_stickers_handler(message: Message):
+    _, stickers_dict = get_stickers()
+    stickers_titles = stickers_dict.keys()
+    stickers_titles_inline_kb = InlineKeyboardMarkup(row_width=3)
+    paginate_inline_kb = InlineKeyboardMarkup(row_width=10)
+
+    paginate_list = get_pagination_list(len(stickers_titles))
+    for num, page in enumerate(paginate_list):
+        activ = "👉" if num == 1 else ""
+        paginate_inline_kb.insert(InlineKeyboardButton(f'{activ}{num}',
+                                                       callback_data=stickers_paginate_callback.new(action="check",
+                                                                                                    start_end=page)))
+
+    for x in range(0, 49):
+        stickers_titles_inline_kb.insert(
+            InlineKeyboardButton(f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
+    await bot.send_message(message.from_user.id,
+                           f"Всего {len(stickers_dict.keys())} паков, на странице по 50 шт.",
+                           reply_markup=stickers_titles_inline_kb)
+
+    await bot.send_message(message.from_user.id,
+                           "...", reply_markup=paginate_inline_kb)
+
+    # global stickers_names_gen
+    # for x in range(0, 50):
+    #     name = next(stickers_names_gen)
+    #     all_names_inline_menu.clean()
+    #     all_names_inline_menu.add(InlineKeyboardButton(f'{name}', url=f'{stickers_dict[name]["url"]}'))
+    #
+    # await bot.send_message(message.from_user.id, f"Всего {len(stickers_dict.keys())} паков. Отправил первые 50 шт...",
+    #                        reply_markup=all_names_inline_menu)
+    # await bot.send_message(message.from_user.id, "{Хватит?}",
+    #                        reply_markup=InlineKeyboardMarkup(row_width=2)
+    #                        .row(InlineKeyboardButton("Продолжаем", callback_data="all_stick__yet"),
+    #                             InlineKeyboardButton("Надоело", callback_data="all_stick__enough")))
+    #
+
+
+@dp.callback_query_handler(stickers_paginate_callback.filter(action="check"))
+async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery, callback_data: dict):
+    bot.send_message(collback.from_user.id, callback_data["start_and"])
+    # @dp.callback_query_handler(Text(startswith="all_stick__"))z
+    # async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery):
+    # global stickers_names_gen
+    # if collback.data.split("__")[1] == "yet":
+    #     all_names_inline_menu.clean()
+    #     for x in range(0, 50):
+    #         name = next(stickers_names_gen)
+    #         all_names_inline_menu.add(InlineKeyboardButton(f'{name}', url=f'{stickers_dict[name]["url"]}'))
+    #
+    #     await bot.send_message(collback.from_user.id,
+    #                            f"Еще 50 шт...",
+    #                            reply_markup=all_names_inline_menu)
+    #     await bot.send_message(collback.from_user.id, "{Хватит?}",
+    #                            reply_markup=InlineKeyboardMarkup(row_width=2)
+    #                            .row(InlineKeyboardButton("Продолжаем", callback_data="all_stick__yet"),
+    #                                 InlineKeyboardButton("Надоело", callback_data="all_stick__enough")))
+
+    await collback.answer()
+
+
+@router.message(FSMStickersSearch.word)
+async def load_word_search_stickers(message: Message, state: FSMContext):
+    _, stickers_dict = get_stickers()
+    stickers_titles = stickers_dict.keys()
+    await state.update_data(word=message.text)
+    data = await state.get_data()
+
+    matches_list = list(filter(lambda x: data['word'] in x, stickers_titles))
+    # await bot.send_message(message.from_user.id, f'{matches_list}')
+    # for x in stickers_names:
+    #     await bot.send_message(message.from_user.id, f'{x}')
+
+    if len(matches_list) > 0:
+        for name in matches_list:
+            bold_name = name[:name.index(data['word'])] + \
+                        "<b>" + data['word'].upper() + "</b>" \
+                        + name[name.index(data['word'])
+                               + len(data['word']):]
+
+            media = types.MediaGroup()
+            img_list = stickers_dict[name]["stickers"]
+
+            if len(img_list) <= 4:
+                for img in img_list:
+                    media.attach_photo(types.InputMediaPhoto(img))
+            else:
+                for x in range(0, 3):
+                    media.attach_photo(types.InputMediaPhoto(img_list[x]))
+            try:
+                if len(media.media) > 0:
+                    print(f'Медиа группа - {len(media.media)} ')
+
+                    await bot.send_media_group(message.from_user.id, media=media)
+                    await bot.send_message(message.from_user.id, f'{bold_name}',
+                                           parse_mode="HTML",
+                                           reply_markup=InlineKeyboardMarkup(row_width=1).add(
+                                               InlineKeyboardButton(
+                                                   text="Подробней / Добавить в телеграм",
+                                                   url=f'{stickers_dict[name]["url"]}')))
+            except Exception as ee:
+                print(f"Что то пошло не так {ee}")
+                with open("static/bad_pack1.txt", 'a') as file:
+                    file.write(name)
+    else:
+        await bot.send_message(message.from_user.id, "По вашему запросу ничего не найдено")
+    await state.clear()
+
+
+
+@router.message(FSMStickersRandom.count)
+async def load_count_random_stickers(message: Message, state: FSMContext):
+    num_string = message.text
+    if not (num_string.isnumeric() and num_string.isdigit() and re.match("[-+]?\d+$", num_string)):
+        await bot.send_message(message.from_user.id, "Введите целое число")
+    else:
+        stickers_list, _ = get_stickers()
+        packs_count = int(num_string)
+        await state.update_data(count=packs_count)
+
+        count = 0
+        await message.answer(f'Ок, работаю...')
+        while count < packs_count:
+            random_sticker_dict = random.choice(stickers_list)
+            img_list = random_sticker_dict["stickers"]
+
+            media = types.MediaGroup()
+            if len(img_list) <= 6:
+                for img in img_list:
+                    media.attach_photo(types.InputMediaPhoto(img))
+            else:
+                for x in range(0, 5):
+                    media.attach_photo(types.InputMediaPhoto(img_list[x]))
+
+            try:
+                if len(media.media) > 0:
+                    print(f'Медиа группа - {len(media.media)} ')
+
+                    await bot.send_message(message.from_user.id, f'<em>{random.choice(phraze_list)}</em>',
+                                           parse_mode="HTML")
+
+                    await bot.send_media_group(message.from_user.id, media=media)
+                    await bot.send_message(message.from_user.id,
+                                           f'Стикеры <b>"{random_sticker_dict["name"]}"</b>',
+                                           parse_mode="HTML",
+                                           reply_markup=InlineKeyboardMarkup(row_width=1).add(
+                                               InlineKeyboardButton(
+                                                   text="Добавить в телеграм",
+                                                   url=f'{random_sticker_dict["url"]}')))
+                    count = count + 1
+            except Exception as ee:
+                print(f"Что то пошло не так {ee}")
+                with open("static/bad_pack.txt", 'a') as file:
+                    file.write(random_sticker_dict["name"])
+        # await bot.send_message(message.from_user.id, "Что то пошло не так...")
+
+        await state.clear()
