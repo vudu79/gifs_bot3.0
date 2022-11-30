@@ -9,12 +9,8 @@ from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from bot import bot, get_stickers
 from keyboards import reply_keyboard_stickers
-from utils import get_pagination_list
+from utils import get_pagination_list, phraze_list
 
-
-class FSMSearch(StatesGroup):
-    subj = State()
-    limit = State()
 
 
 class FSMStickersRandom(StatesGroup):
@@ -32,13 +28,7 @@ class FSMStickersSearch(StatesGroup):
 #     end: int
 #     focus: bool
 
-
 stickers_paginate_callback = CallbackData('action', 'start_end')
-
-gifs = dict()
-storage = MemoryStorage()
-leng_type = ""
-leng_phrase = ""
 
 router = Router()
 
@@ -107,7 +97,8 @@ async def show_all_stickers_handler(message: Message):
     #
 
 
-@dp.callback_query_handler(stickers_paginate_callback.filter(action="check"))
+
+@router.callback_query(stickers_paginate_callback.filter(action="check"))
 async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery, callback_data: dict):
     bot.send_message(collback.from_user.id, callback_data["start_and"])
     # @dp.callback_query_handler(Text(startswith="all_stick__"))z
