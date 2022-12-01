@@ -7,10 +7,11 @@ from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.dispatcher.fsm.state import StatesGroup, State
 from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from bot import bot, get_stickers
-from keyboards import reply_keyboard_stickers
-from utils import get_pagination_list, phraze_list
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from bot import bot, get_stickers
+from keyboards import reply_keyboard_stickers_builder
+from utils import get_pagination_list, phraze_list
 
 
 class FSMStickersRandom(StatesGroup):
@@ -22,18 +23,18 @@ class FSMStickersSearch(StatesGroup):
     count = State()
 
 
-# class StickersPaginateCallback(CallbackData, prefix="my"):
-#     filter: str
-#     start: int
-#     end: int
-#     focus: bool
+class StickersPaginateCallback(CallbackData, prefix="my"):
+    start: int
+    end: int
+    focus: bool
 
-stickers_paginate_callback = CallbackData('action', 'start_end')
+
+# stickers_paginate_callback = CallbackData('action', 'start_end')
 
 router = Router()
 
 
-@router.message(Text(equals="Стикеры", ignore_case=False), state=None)
+@router.message(Text(equals="Стикеры", ignore_case=False))
 async def stickers_menu_show_handler(message: Message):
     # await bot.send_message(message.from_user.id,
     #                        "Более 10000 открыток на праздники!!!",
@@ -41,9 +42,8 @@ async def stickers_menu_show_handler(message: Message):
     #                            InlineKeyboardButton(text="Сегодня", callback_data="holiday__today_"),
     #                            InlineKeyboardButton(text="Календарь", callback_data="holiday__calendar_")))
     # await message.delete_reply_markup()
-    await bot.send_message(message.from_user.id,
-                           "Более 25000 стикер-паков!!! Найти бы только нужный((",
-                           reply_markup=reply_keyboard_stickers)
+    await message.answer("Более 25000 стикер-паков!!! Найти бы только нужный((",
+                         reply_markup=reply_keyboard_stickers_builder.as_markup(resize_keyboard=True))
 
 
 @router.message(Text(equals="Случайные паки", ignore_case=False), state=None)
@@ -62,25 +62,29 @@ async def stickers_search_handler(message: Message, state: FSMContext):
 async def show_all_stickers_handler(message: Message):
     _, stickers_dict = get_stickers()
     stickers_titles = stickers_dict.keys()
-    stickers_titles_inline_kb = InlineKeyboardMarkup(row_width=3)
-    paginate_inline_kb = InlineKeyboardMarkup(row_width=10)
+    stickers_titles_inline_builder = InlineKeyboardBuilder()
+
+    paginate_inline_kb_builder = InlineKeyboardBuilder()
 
     paginate_list = get_pagination_list(len(stickers_titles))
     for num, page in enumerate(paginate_list):
         activ = "👉" if num == 1 else ""
-        paginate_inline_kb.insert(InlineKeyboardButton(f'{activ}{num}',
-                                                       callback_data=stickers_paginate_callback.new(action="check",
-                                                                                                    start_end=page)))
+        paginate_inline_kb_builder.add(InlineKeyboardButton(text=f'{activ}{num}',
+                                                            callback_data=StickersPaginateCallback(
+                                                                start=page[0],
+                                                                end=page[1],
+                                                                focus=False)))
+    paginate_inline_kb_builder.adjust(10)
 
     for x in range(0, 49):
-        stickers_titles_inline_kb.insert(
-            InlineKeyboardButton(f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
-    await bot.send_message(message.from_user.id,
-                           f"Всего {len(stickers_dict.keys())} паков, на странице по 50 шт.",
-                           reply_markup=stickers_titles_inline_kb)
+        stickers_titles_inline_builder.add(
+            InlineKeyboardButton(text=f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
+    stickers_titles_inline_builder.adjust(2)
+    await message.answer(f"Всего найдено - {len(stickers_dict.keys())}. На странице по 50 шт.",
+                         reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
 
     await bot.send_message(message.from_user.id,
-                           "...", reply_markup=paginate_inline_kb)
+                           "...", reply_markup=paginate_inline_kb_builder.as_markup(resize_keyboard=True))
 
     # global stickers_names_gen
     # for x in range(0, 50):
@@ -97,10 +101,9 @@ async def show_all_stickers_handler(message: Message):
     #
 
 
-
-@router.callback_query(stickers_paginate_callback.filter(action="check"))
-async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery, callback_data: dict):
-    bot.send_message(collback.from_user.id, callback_data["start_and"])
+@router.callback_query(StickersPaginateCallback.filter())
+async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery, callback_data: StickersPaginateCallback):
+    bot.send_message(collback.from_user.id, callback_data.start)
     # @dp.callback_query_handler(Text(startswith="all_stick__"))z
     # async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery):
     # global stickers_names_gen
@@ -167,7 +170,6 @@ async def load_word_search_stickers(message: Message, state: FSMContext):
     else:
         await bot.send_message(message.from_user.id, "По вашему запросу ничего не найдено")
     await state.clear()
-
 
 
 @router.message(FSMStickersRandom.count)

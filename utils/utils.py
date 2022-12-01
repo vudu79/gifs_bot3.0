@@ -91,3 +91,12 @@ def get_pagination_list(packs_count: int):
             last = x + 49
             res_list.append((x, last))
     return res_list
+
+
+def func_chunk(lst, n):
+    for x in range(0, len(lst), n):
+        e_c = lst[x: n + x]
+
+        if len(e_c) < n:
+            e_c = e_c + ["" for y in range(n - len(e_c))]
+        yield e_c

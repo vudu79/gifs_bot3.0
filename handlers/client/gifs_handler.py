@@ -73,7 +73,7 @@ async def show_type_category_callback_handler(collback: CallbackQuery):
             )
 
 
-@dp.callback_query_handler(PagesCallbackFactory.filter())
+@router.callback_query(PagesCallbackFactory.filter())
 async def paginate_category_callback_handler(query: CallbackQuery, callback_data: dict):
     page = int(callback_data.get("page"))
     category_one = category_list[page]
@@ -86,17 +86,17 @@ async def paginate_category_callback_handler(query: CallbackQuery, callback_data
     )
 
 
-@dp.callback_query_handler(Text(startswith="category__"), state=None)
+@router.callback_query(Text(startswith="category__"), state=None)
 async def show_list_category_colaback_hendler(collback: CallbackQuery):
     callback_user_id = collback.from_user.id
     res = collback.data.split("__")[1]
     await collback.answer(f'Выбрана категория {res}')
     gifs_from_tenor_list = get_category_list_tenor_req(res)
     for gif in gifs_from_tenor_list:
-        try:
-            await bot.send_animation(callback_user_id, gif, callback_data="save__")
-        except RetryAfter as e:
-            await asyncio.sleep(e.timeout)
+        # try:
+        await bot.send_animation(callback_user_id, gif, callback_data="save__")
+        # except RetryAfter as e:
+        #     await asyncio.sleep(e.timeout)
     await collback.answer()
 
 
@@ -109,7 +109,7 @@ async def choose_lang_handler(message: Message):
                          reply_markup=inline_keyboard_lang_builder.as_markup(resize_keyboard=True))
 
 
-@dp.callback_query_handler(Text(startswith="leng__"), state=None)
+@router.callback_query(Text(startswith="leng__"), state=None)
 async def colaback_hendler_lang_start_search(collback: CallbackQuery, state: FSMContext):
     res = collback.data.split("__")[1]
     print(f'Выбран язык - {res}')
