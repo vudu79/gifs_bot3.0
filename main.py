@@ -1,84 +1,62 @@
-from handlers.old import client, other, admin
-from create_bot import bot, dp
-
-
 import asyncio
+import json
 import logging
-import pathlib
+from aiogram import types
 
-#
-# if __name__ == '__main__':
-#     logging.basicConfig(level=logging.INFO)
-#     dp.start_polling()
+from bot import dp, bot
+from handlers.client import stickers_handler, start_handler, gifs_handler, cards_handler, end_handler
+
+with open("static/stickers_tlgrm.json", "r", encoding="utf-8") as file:
+    stickers_list = json.load(file)
+stickers_dict = {}
+
+for pack in stickers_list:
+    stickers_dict[pack["name"]] = pack
+
+with open('calendar.json', 'r', encoding='utf-8') as f:
+    js = f.read()
+
+calendar_dict = json.loads(js)
+
+with open('calendar_storage.json', 'r', encoding='utf-8') as f:
+    js = f.read()
+
+calendar_storage = json.loads(js)
+
+# Включаем логирование, чтобы не пропустить важные сообщения
+logging.basicConfig(level=logging.INFO)
 
 
-async def bot_start(logger: logging.Logger) -> None:
-    logging.basicConfig(level=logging.INFO)
+# Объект бота
 
-    # commands_for_bot = []
-    # for cmd in bot_commands:
-    #     commands_for_bot.append(BotCommand(command=cmd[0], description=cmd[1]))
-    #
-    # redis = Redis(
-    #     host=os.getenv('REDIS_HOST') or '127.0.0.1',
-    #     password=os.getenv('REDIS_PASSWORD') or None,
-    #     username=os.getenv('REDIS_USER') or None,
-    # )
-    #
-    # i18n = I18n(path=WORKDIR / 'locales', default_locale='ru', domain='messages')
-    # i18n_middleware = ConstI18nMiddleware(i18n=i18n, locale='ru')
-    #
-    # dp = Dispatcher()
-    # dp.message.middleware(RegisterCheck())
-    # dp.callback_query.middleware(RegisterCheck())
-    #
-    # i18n_middleware.setup(dp)
-    #
-    # bot = Bot(token=os.getenv('token'), parse_mode='HTML')  # type: ignore
-    # await bot.set_my_commands(commands=commands_for_bot)
-    # register_user_commands(dp)
+# Хэндлер на команду /start
+@dp.message(commands=["start"])
+async def cmd_start(message: types.Message):
+    await message.answer("Hello!")
 
-    client.register_handlers_client(dp)
-    admin.register_handlers_admin(dp)
-    other.register_handlers_other(dp)
 
-    # postgres_url = URL.create(
-    #     "postgresql+asyncpg",
-    #     username=os.getenv("POSTGRES_USER"),
-    #     host=os.getenv('POSTGRES_HOST'),
-    #     database=os.getenv("POSTGRES_DB"),
-    #     port=int(os.getenv("POSTGRES_PORT") or 0),
-    #     password=os.getenv('POSTGRES_PASSWORD')
-    # )
-    # async_engine = create_async_engine(postgres_url)
-    # session_maker = get_session_maker(async_engine)
+def get_stickers():
+    return stickers_list, stickers_dict
 
-    # Делегировано alembic
-    # await proceed_schemas(async_engine, BaseModel.metadata)
-    # await dp.start_polling(bot, session_maker=session_maker, logger=logger, redis=redis)
 
+def get_calendar():
+    return calendar_dict
+
+
+# Запуск процесса поллинга новых апдейтов
+async def main():
+    dp.include_router(start_handler.router)
+
+    dp.include_router(stickers_handler.router)
+    dp.include_router(cards_handler.router)
+    dp.include_router(gifs_handler.router)
+
+    dp.include_router(end_handler.router)
+
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 
-def setup_env():
-    """Настройка переменных окружения"""
-    from dotenv import load_dotenv
-    path = pathlib.Path(__file__).parent.parent
-    dotenv_path = path.joinpath('.env')
-    if dotenv_path.exists():
-        load_dotenv(dotenv_path)
-
-
-def main():
-    """Функция для запуска через poetry"""
-    logger = logging.getLogger(__name__)
-    try:
-        setup_env()
-        asyncio.run(bot_start(logger))
-        logger.info('Bot started')
-    except (KeyboardInterrupt, SystemExit):
-        logger.info('Bot stopped')
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    # print(config.bot_token.get_secret_value())
+    asyncio.run(main())

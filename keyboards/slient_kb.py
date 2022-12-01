@@ -48,4 +48,4 @@ english_button = InlineKeyboardButton(text="English", callback_data="leng__engl_
 inline_keyboard_lang_builder = InlineKeyboardBuilder()
 inline_keyboard_lang_builder.row(rus_button, english_button)
 
-all_names_inline_menu = InlineKeyboardMarkup(row_width=4)
+# all_names_inline_menu = InlineKeyboardMarkup(row_width=4)

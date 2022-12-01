@@ -9,7 +9,8 @@ from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from bot import bot, get_stickers
+from bot import bot
+from main import get_stickers
 from keyboards import reply_keyboard_stickers_builder
 from utils import get_pagination_list, phraze_list
 

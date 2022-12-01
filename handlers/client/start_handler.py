@@ -16,7 +16,7 @@ async def start_handler(message: Message):
     await message.answer("Тыц 👇")
 
 
-@router.message(Text(equals="Меню", ignore_case=True))
+@router.message(text="Меню")
 async def main_menu_handler(message: Message):
     # await message.answer(message.from_user.id, "", reply_markup=types.ReplyKeyboardRemove())
     await message.answer("...", reply_markup=reply_keyboard_main_builder.as_markup(resize_keyboard=True))
