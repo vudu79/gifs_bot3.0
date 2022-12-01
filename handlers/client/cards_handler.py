@@ -28,7 +28,7 @@ async def cards_menu_show_handler(message: Message):
 @router.message(Text(equals="Календарь", ignore_case=False), state=None)
 async def carendar_holiday_message_handler(message: Message):
     inline_keyboard_holiday_builder = InlineKeyboardBuilder()
-    _, calendar_dict = get_stickers()
+    calendar_dict = get_calendar()
     for month in calendar_dict.keys():
         # inline_keyboard_holiday.clean()
         inline_keyboard_holiday_builder.add(
