@@ -1,12 +1,12 @@
+from aiogram.dispatcher.filters.callback_data import CallbackData
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from create_bot import stickers_list
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 phraze_list = ["Секундочку, склеиваю фотки...", "минутку, ищу в интернетах...)", "Подождите, собираю пазл...",
                "Надо подождать, вспоминаю, что надо было сделать...", "Подождите,выгружаю по частям...",
                "Приходите попозже, устал, у меня перерыв...", "Минутку подождите, я форматирую ваши диски))"]
-
-
-
 
 
 # def get_stickers(count: int, massage: types.Message, img_list: list):
@@ -39,22 +39,25 @@ phraze_list = ["Секундочку, склеиваю фотки...", "мину
 
 # await bot.send_message(message.from_user.id, "Что то пошло не так...")
 
+class PagesCallbackFactory(CallbackData, prefix="CategorY__"):
+    page: str
+    category_name: str
 
-def get_pagination_keyboard(page: int = 0, category_list: any = None,
-                            categories_callback: CallbackData = None) -> InlineKeyboardMarkup:
-    keyboard = InlineKeyboardMarkup(row_width=1)
+
+def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineKeyboardBuilder:
+    keyboard_builder = InlineKeyboardBuilder()
     has_next_page = len(category_list) > page + 1
 
     if page != 0:
-        keyboard.add(
+        keyboard_builder.add(
             InlineKeyboardButton(
                 text="👈",
-                callback_data=categories_callback.new(page=page - 1,
-                                                      category_name=f'{category_list[page - 1]["searchterm"]}')
+                callback_data=PagesCallbackFactory(page=page - 1,
+                                                   category_name=f'{category_list[page - 1]["searchterm"]}')
             )
         )
 
-    keyboard.add(
+    keyboard_builder.add(
         InlineKeyboardButton(
             text=f'Показать все из "{str.capitalize(category_list[page]["searchterm"])}"',
             callback_data=f'category__{category_list[page]["searchterm"]}"'
@@ -62,22 +65,22 @@ def get_pagination_keyboard(page: int = 0, category_list: any = None,
     )
 
     if has_next_page:
-        keyboard.add(
+        keyboard_builder.add(
             InlineKeyboardButton(
                 text="👉",
-                callback_data=categories_callback.new(page=page + 1,
-                                                      category_name=f'{category_list[page + 1]["searchterm"]}')
+                callback_data=PagesCallbackFactory(page=page + 1,
+                                                   category_name=f'{category_list[page + 1]["searchterm"]}')
             )
         )
-
-    return keyboard
+    keyboard_builder.adjust(3)
+    return keyboard_builder
 
 
 def get_pagination_list(packs_count: int):
     res_list = list()
     count = packs_count % 50
     # print(count)
-    last= 0
+    last = 0
     if count > 0:
         for x in range(1, packs_count - 49, 50):
             last = x + 49
