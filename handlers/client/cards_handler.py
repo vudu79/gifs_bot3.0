@@ -133,7 +133,7 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
                 for img in step_list:
                     if img != "":
                         # media.attach_photo(types.InputMediaPhoto(img), f'{holiday.split("-")[1]}')
-                        media.append(types.InputMediaPhoto(img))
+                        media.append(types.InputMediaPhoto(type='photo', media=img))
 
                 try:
                     await bot.send_media_group(callback_user_id, media=media)
@@ -147,7 +147,7 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
             media = list()
             for img in image_generator:
                 # media.attach_photo(types.InputMediaPhoto(img), f'{holiday.split("-")[1]}')
-                media.append(types.InputMediaPhoto(img))
+                media.append(types.InputMediaPhoto(type='photo', media=img))
 
             try:
                 await bot.send_media_group(callback_user_id, media=media)
