@@ -92,7 +92,7 @@ def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineK
             InlineKeyboardButton(
                 text="👈",
                 callback_data=PagesCallbackFactory(page=page - 1,
-                                                   category_name=f'{category_list[page - 1]["searchterm"]}')
+                                                   category_name=f'{category_list[page - 1]["searchterm"]}').pack()
             )
         )
 
@@ -108,7 +108,7 @@ def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineK
             InlineKeyboardButton(
                 text="👉",
                 callback_data=PagesCallbackFactory(page=page + 1,
-                                                   category_name=f'{category_list[page + 1]["searchterm"]}')
+                                                   category_name=f'{category_list[page + 1]["searchterm"]}').pack()
             )
         )
     keyboard_builder.adjust(3)

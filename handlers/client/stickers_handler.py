@@ -73,7 +73,7 @@ async def show_all_stickers_handler(message: Message):
                                                             callback_data=StickersPaginateCallback(
                                                                 start=page[0],
                                                                 end=page[1],
-                                                                focus=False)))
+                                                                focus=False).pack()))
     paginate_inline_kb_builder.adjust(10)
 
     for x in range(0, 49):
