@@ -233,11 +233,12 @@ async def load_subj_sm_translate(message: Message, state: FSMContext):
 @router.message(text="Популярные гифки")
 async def trand_api(message: Message):
     await message.answer("Минутку, произвожу поиск...")
-    global gifs
-    gifs.clear()
+    # global gifs
     gifs = trend_req()
     for item in gifs.items():
         await bot.send_animation(message.from_user.id, item[1])
+
+    gifs.clear()
     await message.answer("Сделано, жду команд!")
 
 #
