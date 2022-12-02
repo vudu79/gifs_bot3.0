@@ -1,13 +1,10 @@
 import random
 from datetime import datetime
-
 from aiogram import Router, types
-from aiogram.dispatcher.filters.text import Text
 from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot import bot
 from utils import func_chunk, phraze_list, StaticMedia
-
 from keyboards import reply_keyboard_cards_builder
 
 router = Router()
@@ -77,8 +74,8 @@ async def show_month_events_callback_handler(collback: CallbackQuery):
         # inline_keyboard_events.clean()
         inline_keyboard_events_builder.add(
             InlineKeyboardButton(text=f'{event}', callback_data=f'&ev_{month}_{str(hash(event))}'))
-
-    await collback.message.answer('Выберите месяц...',
+    inline_keyboard_events_builder.adjust(1)
+    await collback.message.answer('Все что нашел...',
                                   reply_markup=inline_keyboard_events_builder.as_markup(resize_keyboard=True))
     await collback.answer()
 
