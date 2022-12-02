@@ -79,7 +79,7 @@ class StaticMedia:
 
 class PagesCallbackFactory(CallbackData, prefix="CategorY__"):
     page: int
-    category_name: str
+    category_name: any
 
 
 def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineKeyboardBuilder:
