@@ -21,21 +21,21 @@ class StaticMedia:
     def __init__(self, stickers_url: str, calendar_url: str):
         self.stickers_url = stickers_url
         self.calendar_url = calendar_url
-
-    def get_stickers_list(self):
         with open(self.stickers_url, "r", encoding="utf-8") as file:
             self.sticker_list = json.load(file)
-        return self.sticker_list
-
-    def get_stickers_dict(self):
-        for pack in self.get_stickers_list():
+        for pack in self.sticker_list:
             self.sticker_dict[pack["name"]] = pack
-        return self.sticker_dict
-
-    def get_calendar_dict(self):
         with open(self.calendar_url, 'r', encoding='utf-8') as f:
             js = f.read()
         self.calendar_dict = json.loads(js)
+
+    def get_stickers_list(self):
+        return self.sticker_list
+
+    def get_stickers_dict(self):
+        return self.sticker_dict
+
+    def get_calendar_dict(self):
         return self.calendar_dict
 
 
