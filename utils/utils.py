@@ -78,7 +78,7 @@ class StaticMedia:
 # await bot.send_message(message.from_user.id, "Что то пошло не так...")
 
 class PagesCallbackFactory(CallbackData, prefix="CategorY__"):
-    page: str
+    page: int
     category_name: str
 
 
