@@ -61,7 +61,7 @@ async def stickers_search_handler(message: Message, state: FSMContext):
 @router.message(text="Показать все")
 async def show_all_stickers_handler(message: Message):
     stickers_dict = static_media.get_stickers_dict()
-    stickers_titles = stickers_dict.keys()
+    stickers_titles = list(stickers_dict.keys())
     stickers_titles_inline_builder = InlineKeyboardBuilder()
 
     paginate_inline_kb_builder = InlineKeyboardBuilder()
