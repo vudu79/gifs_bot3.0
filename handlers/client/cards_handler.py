@@ -92,7 +92,7 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
     event_hash = collback.data.split("_")[2]
 
     # events_list = calendar_storage[month].keys()
-    _, calendar_dict = get_stickers()
+    calendar_dict = static_media.get_calendar_dict()
     events_list = calendar_dict[month].keys()
     img_list = list()
     holiday = "???"
