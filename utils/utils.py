@@ -23,6 +23,7 @@ class StaticMedia:
         self.calendar_url = calendar_url
         with open(self.stickers_url, "r", encoding="utf-8") as file:
             self.sticker_list = json.load(file)
+        self.sticker_dict = {}
         for pack in self.sticker_list:
             self.sticker_dict[pack["name"]] = pack
         with open(self.calendar_url, 'r', encoding='utf-8') as f:
