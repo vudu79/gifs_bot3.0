@@ -84,7 +84,7 @@ async def show_all_stickers_handler(message: Message):
                          reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
 
     await bot.send_message(message.from_user.id,
-                           "...", reply_markup=paginate_inline_kb_builder.as_markup(resize_keyboard=True))
+                           "и еще немного страниц...", reply_markup=paginate_inline_kb_builder.as_markup(resize_keyboard=True))
 
     # global stickers_names_gen
     # for x in range(0, 50):
