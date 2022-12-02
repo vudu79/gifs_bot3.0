@@ -128,10 +128,12 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
                 step_list = next(image_generator)
                 await collback.message.answer(
                     f'{random.choice(phraze_list) if len_img_list > 10 else "Минутку, подбираю открытки..."}')
-                media = types.MediaGroup()
+                # media = types.MediaGroup()
+                media = list()
                 for img in step_list:
                     if img != "":
-                        media.attach_photo(types.InputMediaPhoto(img), f'{holiday.split("-")[1]}')
+                        # media.attach_photo(types.InputMediaPhoto(img), f'{holiday.split("-")[1]}')
+                        media.append(types.InputMediaPhoto(img))
 
                 try:
                     await bot.send_media_group(callback_user_id, media=media)
@@ -141,9 +143,11 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
                     print(f'Что то пошло не так - {ee}')
 
         else:
-            media = types.MediaGroup()
+            # media = types.MediaGroup()
+            media = list()
             for img in image_generator:
-                media.attach_photo(types.InputMediaPhoto(img), f'{holiday.split("-")[1]}')
+                # media.attach_photo(types.InputMediaPhoto(img), f'{holiday.split("-")[1]}')
+                media.append(types.InputMediaPhoto(img))
 
             try:
                 await bot.send_media_group(callback_user_id, media=media)
