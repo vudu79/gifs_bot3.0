@@ -144,15 +144,16 @@ async def load_word_search_stickers(message: Message, state: FSMContext):
                         + name[name.index(data['word'])
                                + len(data['word']):]
 
-            media = types.MediaGroup()
+            # media = types.MediaGroup()
+            media = list()
             img_list = stickers_dict[name]["stickers"]
 
             if len(img_list) <= 4:
                 for img in img_list:
-                    media.attach_photo(types.InputMediaPhoto(img))
+                    media.append(types.InputMediaPhoto(type='photo', media=img))
             else:
                 for x in range(0, 3):
-                    media.attach_photo(types.InputMediaPhoto(img_list[x]))
+                    media.append(types.InputMediaPhoto(type='photo', media=img_list[x]))
             try:
                 if len(media.media) > 0:
                     print(f'Медиа группа - {len(media.media)} ')
@@ -189,13 +190,14 @@ async def load_count_random_stickers(message: Message, state: FSMContext):
             random_sticker_dict = random.choice(stickers_list)
             img_list = random_sticker_dict["stickers"]
 
-            media = types.MediaGroup()
+            # media = types.MediaGroup()
+            media = list()
             if len(img_list) <= 6:
                 for img in img_list:
-                    media.attach_photo(types.InputMediaPhoto(img))
+                    media.append(types.InputMediaPhoto(type='photo', media=img))
             else:
                 for x in range(0, 5):
-                    media.attach_photo(types.InputMediaPhoto(img_list[x]))
+                    media.append(types.InputMediaPhoto(type='photo', media=img_list[x]))
 
             try:
                 if len(media.media) > 0:
