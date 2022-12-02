@@ -74,7 +74,7 @@ async def show_all_stickers_handler(message: Message):
                                                                 start=page[0],
                                                                 end=page[1],
                                                                 focus=False).pack()))
-    paginate_inline_kb_builder.adjust(9)
+    paginate_inline_kb_builder.adjust(8)
 
     for x in range(0, 49):
         stickers_titles_inline_builder.add(
