@@ -117,17 +117,17 @@ def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineK
 
 def get_pagination_list(packs_count: int):
     res_list = list()
-    count = packs_count % 50
+    count = packs_count % 100
     # print(count)
     last = 0
     if count > 0:
-        for x in range(1, packs_count - 49, 50):
-            last = x + 49
+        for x in range(1, packs_count - 99, 100):
+            last = x + 99
             res_list.append((x, last))
         res_list.append((last + 1, last + count))
     else:
-        for x in range(1, packs_count, 50):
-            last = x + 49
+        for x in range(1, packs_count, 100):
+            last = x + 99
             res_list.append((x, last))
     return res_list
 
