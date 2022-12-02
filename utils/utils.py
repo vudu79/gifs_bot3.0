@@ -1,3 +1,5 @@
+import json
+
 from aiogram.dispatcher.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
@@ -8,6 +10,42 @@ phraze_list = ["Секундочку, склеиваю фотки...", "мину
                "Надо подождать, вспоминаю, что надо было сделать...", "Подождите,выгружаю по частям...",
                "Приходите попозже, устал, у меня перерыв...", "Минутку подождите, я форматирую ваши диски))"]
 
+
+class StaticMedia:
+    sticker_list: list
+    sticker_dict: dict
+    calendar_dict: dict
+    stickers_url: str
+    calendar_url: str
+
+    def __init__(self, stickers_url: str, calendar_url: str):
+        self.stickers_url = stickers_url
+        self.calendar_url = calendar_url
+
+    def get_stickers_list(self):
+        with open(self.stickers_url, "r", encoding="utf-8") as file:
+            self.sticker_list = json.load(file)
+        return self.sticker_list
+
+    def get_stickers_dict(self):
+        for pack in self.get_stickers_list():
+            self.sticker_dict[pack["name"]] = pack
+        return self.sticker_dict
+
+    def get_calendar_dict(self):
+        with open(self.calendar_url, 'r', encoding='utf-8') as f:
+            js = f.read()
+        self.calendar_dict = json.loads(js)
+        return self.calendar_dict
+
+
+# with open('calendar_storage.json', 'r', encoding='utf-8') as f:
+#     js = f.read()
+
+# calendar_storage = json.loads(js)
+
+# "static/stickers_tlgrm.json"
+# 'calendar.json'
 
 # def get_stickers(count: int, massage: types.Message, img_list: list):
 #     media = types.MediaGroup()

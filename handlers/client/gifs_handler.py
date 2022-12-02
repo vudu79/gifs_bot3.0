@@ -26,7 +26,7 @@ class FSMSearch(StatesGroup):
 category_list = get_categories_tenor_req()
 
 
-@router.message(Text(equals="Гифки", ignore_case=False), state=None)
+@router.message(text="Гифки", state=None)
 async def gifs_menu_show_handler(message: Message):
     # await bot.send_message(message.from_user.id,
     #                        "Более 10000 открыток на праздники!!!",
@@ -38,7 +38,7 @@ async def gifs_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_gifs_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Text(equals="Популярные категории", ignore_case=False), state=None)
+@router.message(text="Популярные категории", state=None)
 async def category_index_handler(message: Message):
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text="Все сразу", callback_data="collect_cat__yes"),
@@ -47,7 +47,7 @@ async def category_index_handler(message: Message):
                          reply_markup=builder.as_markup(resize_keyboard=True))
 
 
-@router.callback_query(Text(startswith="collect_cat__"))
+@router.callback_query(text_startswith="collect_cat__")
 async def show_type_category_callback_handler(collback: CallbackQuery):
     res = collback.data.split("__")[1]
     if res == "yes":
@@ -86,7 +86,7 @@ async def paginate_category_callback_handler(query: CallbackQuery, callback_data
     )
 
 
-@router.callback_query(Text(startswith="category__"), state=None)
+@router.callback_query(text_startswith="category__", state=None)
 async def show_list_category_colaback_hendler(collback: CallbackQuery):
     callback_user_id = collback.from_user.id
     res = collback.data.split("__")[1]
@@ -103,13 +103,13 @@ async def show_list_category_colaback_hendler(collback: CallbackQuery):
 # Машина состояний для searchAPI________________________________________________________________________________________
 # Запускаем машину состояния FSMAdmin хэндлером
 
-@router.message(Text(equals="Найти по слову", ignore_case=False))
+@router.message(text="Найти по слову")
 async def choose_lang_handler(message: Message):
     await message.answer("Выберите язык на котором будете писать запрос",
                          reply_markup=inline_keyboard_lang_builder.as_markup(resize_keyboard=True))
 
 
-@router.callback_query(Text(startswith="leng__"), state=None)
+@router.callback_query(text_startswith="leng__", state=None)
 async def colaback_hendler_lang_start_search(collback: CallbackQuery, state: FSMContext):
     res = collback.data.split("__")[1]
     print(f'Выбран язык - {res}')
@@ -130,7 +130,7 @@ async def colaback_hendler_lang_start_search(collback: CallbackQuery, state: FSM
 
 # Выход из состояния
 @router.message(state="*", commands='отмена')
-@router.message(Text(equals=['отмена', 'Отменить поиск'], ignore_case=False), state="*")
+@router.message(text=['отмена', 'Отменить поиск'], state="*")
 async def cansel_state_search(maseege: Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
@@ -157,7 +157,7 @@ async def load_limit_sm_search(message: Message, state: FSMContext):
     data = await state.get_data()
     list_gifs = search_req(data["subj"], data["limit"], leng_type)
     for gif in list_gifs:
-        await bot.send_animation(message.from_user.id, gif,  callback_data="save__")
+        await bot.send_animation(message.from_user.id, gif, callback_data="save__")
     await message.answer("Сделано, жду команд!")
     await state.clear()
 
@@ -168,14 +168,14 @@ class FSMRandom(StatesGroup):
     subj = State()
 
 
-@router.message(Text(equals="Случайная по слову", ignore_case=False), state=None)
+@router.message(text="Случайная по слову", state=None)
 async def cm_start_random(message: Message, state: FSMContext):
     await state.set_state(FSMRandom.subj)
     await message.answer("Напишите ключевое слово для поиска на английском языке")
 
 
 @router.message(state="*", commands='отмена')
-@router.message(Text(equals=['отмена', 'Отменить поиск'], ignore_case=False), state="*")
+@router.message(text=['отмена', 'Отменить поиск'], state="*")
 async def cansel_state_random(maseege: Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
@@ -201,14 +201,14 @@ class FSMTranslate(StatesGroup):
     phrase = State()
 
 
-@router.message(Text(equals="Гифка под фразу", ignore_case=False), state=None)
+@router.message(text="Гифка под фразу", state=None)
 async def cm_start_translate(message: Message, state: FSMContext):
     await state.set_state(FSMTranslate.phrase)
     await message.answer("Напишите любую фразу на английском языке")
 
 
 @router.message(state="*", commands='отмена')
-@router.message(Text(equals=['отмена', 'Отменить поиск'], ignore_case=False), state="*")
+@router.message(text=['отмена', 'Отменить поиск'], state="*")
 async def cansel_state_translate(maseege: Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
@@ -218,7 +218,7 @@ async def cansel_state_translate(maseege: Message, state: FSMContext):
     await maseege.answer("Что будем искать?)")
 
 
-@router.message(state=FSMTranslate.phrase)
+@router.message(FSMTranslate.phrase)
 async def load_subj_sm_translate(message: Message, state: FSMContext):
     await state.update_data(phrase=message.text)
     await message.answer("Okey, я запомнил. Произвожу поиск ...")
@@ -230,7 +230,7 @@ async def load_subj_sm_translate(message: Message, state: FSMContext):
 
 # trendAPI_________________________________________________________________
 
-@router.message(Text(equals="Популярные гифки"))
+@router.message(text="Популярные гифки")
 async def trand_api(message: Message):
     await message.answer("Минутку, произвожу поиск...")
     global gifs

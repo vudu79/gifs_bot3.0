@@ -6,22 +6,6 @@ from aiogram import types
 from bot import dp, bot
 from handlers.client import stickers_handler, start_handler, gifs_handler, cards_handler, end_handler
 
-with open("static/stickers_tlgrm.json", "r", encoding="utf-8") as file:
-    stickers_list = json.load(file)
-stickers_dict = {}
-
-for pack in stickers_list:
-    stickers_dict[pack["name"]] = pack
-
-with open('calendar.json', 'r', encoding='utf-8') as f:
-    js = f.read()
-
-calendar_dict = json.loads(js)
-
-with open('calendar_storage.json', 'r', encoding='utf-8') as f:
-    js = f.read()
-
-calendar_storage = json.loads(js)
 
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
@@ -34,13 +18,6 @@ logging.basicConfig(level=logging.INFO)
 async def cmd_start(message: types.Message):
     await message.answer("Hello!")
 
-
-def get_stickers():
-    return stickers_list, stickers_dict
-
-
-def get_calendar():
-    return calendar_dict
 
 
 # Запуск процесса поллинга новых апдейтов

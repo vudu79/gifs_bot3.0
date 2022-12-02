@@ -5,14 +5,13 @@ from aiogram.dispatcher.filters.callback_data import CallbackData
 from aiogram.dispatcher.filters.text import Text
 from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.dispatcher.fsm.state import StatesGroup, State
-from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-
 from bot import bot
-from main import get_stickers
+from utils import StaticMedia, get_pagination_list, phraze_list
 from keyboards import reply_keyboard_stickers_builder
-from utils import get_pagination_list, phraze_list
+
+static_media = StaticMedia(stickers_url="static/stickers_tlgrm.json", calendar_url='calendar.json')
 
 
 class FSMStickersRandom(StatesGroup):
@@ -35,7 +34,7 @@ class StickersPaginateCallback(CallbackData, prefix="my"):
 router = Router()
 
 
-@router.message(Text(equals="Стикеры", ignore_case=False))
+@router.message(text="Стикеры")
 async def stickers_menu_show_handler(message: Message):
     # await bot.send_message(message.from_user.id,
     #                        "Более 10000 открыток на праздники!!!",
@@ -47,21 +46,21 @@ async def stickers_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_stickers_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Text(equals="Случайные паки", ignore_case=False), state=None)
+@router.message(text="Случайные паки", state=None)
 async def stickers_random_handler(message: Message, state: FSMContext):
     await message.answer("Сколько паков найти?")
     await state.set_state(FSMStickersRandom.count)
 
 
-@router.message(Text(equals="Поиск по словам", ignore_case=False), state=None)
+@router.message(text="Поиск по словам", state=None)
 async def stickers_search_handler(message: Message, state: FSMContext):
     await message.answer("Введите слово или фразу для поиска (ru/en)...")
     await state.set_state(FSMStickersSearch.word)
 
 
-@router.message(Text(equals="Показать все", ignore_case=False))
+@router.message(text="Показать все")
 async def show_all_stickers_handler(message: Message):
-    _, stickers_dict = get_stickers()
+    stickers_dict = static_media.get_stickers_dict()
     stickers_titles = stickers_dict.keys()
     stickers_titles_inline_builder = InlineKeyboardBuilder()
 
@@ -103,7 +102,8 @@ async def show_all_stickers_handler(message: Message):
 
 
 @router.callback_query(StickersPaginateCallback.filter())
-async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery, callback_data: StickersPaginateCallback):
+async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery,
+                                                   callback_data: StickersPaginateCallback):
     bot.send_message(collback.from_user.id, callback_data.start)
     # @dp.callback_query_handler(Text(startswith="all_stick__"))z
     # async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery):
@@ -127,7 +127,7 @@ async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery
 
 @router.message(FSMStickersSearch.word)
 async def load_word_search_stickers(message: Message, state: FSMContext):
-    _, stickers_dict = get_stickers()
+    stickers_dict = static_media.get_stickers_dict()
     stickers_titles = stickers_dict.keys()
     await state.update_data(word=message.text)
     data = await state.get_data()
@@ -179,7 +179,7 @@ async def load_count_random_stickers(message: Message, state: FSMContext):
     if not (num_string.isnumeric() and num_string.isdigit() and re.match("[-+]?\d+$", num_string)):
         await bot.send_message(message.from_user.id, "Введите целое число")
     else:
-        stickers_list, _ = get_stickers()
+        stickers_list = static_media.get_stickers_list()
         packs_count = int(num_string)
         await state.update_data(count=packs_count)
 

@@ -5,15 +5,17 @@ from aiogram import Router, types
 from aiogram.dispatcher.filters.text import Text
 from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from bot import get_stickers, bot
-from utils import func_chunk, phraze_list
+from bot import bot
+from utils import func_chunk, phraze_list, StaticMedia
 
 from keyboards import reply_keyboard_cards_builder
 
 router = Router()
 
+static_media = StaticMedia(stickers_url="static/stickers_tlgrm.json", calendar_url='calendar.json')
 
-@router.message(Text(equals="Открытки", ignore_case=False), state=None)
+
+@router.message(text="Открытки", state=None)
 async def cards_menu_show_handler(message: Message):
     # await message.answer(message.from_user.id,
     #                        "Более 10000 открыток на праздники!!!",
@@ -25,10 +27,10 @@ async def cards_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_cards_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Text(equals="Календарь", ignore_case=False), state=None)
+@router.message(text="Календарь", state=None)
 async def carendar_holiday_message_handler(message: Message):
     inline_keyboard_holiday_builder = InlineKeyboardBuilder()
-    calendar_dict = get_calendar()
+    calendar_dict = static_media.get_calendar_dict()
     for month in calendar_dict.keys():
         # inline_keyboard_holiday.clean()
         inline_keyboard_holiday_builder.add(
@@ -38,13 +40,13 @@ async def carendar_holiday_message_handler(message: Message):
                          reply_markup=inline_keyboard_holiday_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Text(equals="Сегодня", ignore_case=False), state=None)
+@router.message(text="Сегодня", state=None)
 async def today_holiday_message_handler(message: Message):
     inline_keyboard_today_events_builder = InlineKeyboardBuilder()
 
     today = datetime.today().strftime("%-d.%m")
     count = 0
-    _, calendar_dict = get_stickers()
+    calendar_dict = static_media.get_calendar_dict()
 
     for month in calendar_dict.keys():
         event_list = calendar_dict[month].keys()
@@ -63,11 +65,11 @@ async def today_holiday_message_handler(message: Message):
         await message.answer('На сегодня ничего не нашел ((')
 
 
-@router.callback_query(Text(startswith="month__"), state=None)
+@router.callback_query(text_startswith="month__", state=None)
 async def show_month_events_callback_handler(collback: CallbackQuery):
     callback_user_id = collback.from_user.id
     month = collback.data.split("__")[1]
-    _, calendar_dict = get_stickers()
+    calendar_dict = static_media.get_calendar_dict()
     events_list = calendar_dict[month].keys()
 
     inline_keyboard_events_builder = InlineKeyboardBuilder()
@@ -81,7 +83,7 @@ async def show_month_events_callback_handler(collback: CallbackQuery):
     await collback.answer()
 
 
-@router.callback_query(Text(startswith="&ev_"), state=None)
+@router.callback_query(text_startswith="&ev_", state=None)
 async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
     # phraze_list = ["Склеиваю открытки...", "Ищу в интернетах...)", "Собираю пазл...",
     #                "Вспоминаю, что надо было сделать...", "Выгружаю по частям...", "Устал, у меня перерыв..."]
@@ -124,7 +126,8 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
         if is_more_ten:
             for x in range(len_generator):
                 step_list = next(image_generator)
-                await collback.message.answer(f'{random.choice(phraze_list) if len_img_list > 10 else "Минутку, подбираю открытки..."}')
+                await collback.message.answer(
+                    f'{random.choice(phraze_list) if len_img_list > 10 else "Минутку, подбираю открытки..."}')
                 media = types.MediaGroup()
                 for img in step_list:
                     if img != "":
