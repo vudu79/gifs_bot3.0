@@ -6,19 +6,8 @@ from aiogram import types
 from bot import dp, bot
 from handlers.client import stickers_handler, start_handler, gifs_handler, cards_handler, end_handler
 
-
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
-
-
-# Объект бота
-
-# Хэндлер на команду /start
-@dp.message(commands=["start"])
-async def cmd_start(message: types.Message):
-    await message.answer("Hello!")
-
-
 
 # Запуск процесса поллинга новых апдейтов
 async def main():
