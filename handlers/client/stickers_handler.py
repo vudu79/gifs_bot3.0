@@ -214,12 +214,13 @@ async def load_count_random_stickers(message: Message, state: FSMContext):
                                            parse_mode="HTML")
 
                     await bot.send_media_group(message.from_user.id, media=media)
+
+                    builder = InlineKeyboardBuilder()
+                    builder.row(InlineKeyboardButton(text="Добавить в телеграм", url=f'{random_sticker_dict["url"]}'))
                     await bot.send_message(message.from_user.id,
                                            f'Стикеры <b>"{random_sticker_dict["name"]}"</b>',
                                            parse_mode="HTML",
-                                           reply_markup=InlineKeyboardMarkup(keyboards=[InlineKeyboardButton(
-                                               text="Добавить в телеграм",
-                                               url=f'{random_sticker_dict["url"]}')]))
+                                           reply_markup=builder.as_markup(resize_keyboard=True))
                     count = count + 1
             except Exception as ee:
                 print(f"Что то пошло не так в рандомных паках --- {ee}")
