@@ -74,8 +74,8 @@ async def show_type_category_callback_handler(collback: CallbackQuery):
 
 
 @router.callback_query(PagesCallbackFactory.filter())
-async def paginate_category_callback_handler(query: CallbackQuery, callback_data: dict):
-    page = int(callback_data.get("page"))
+async def paginate_category_callback_handler(query: CallbackQuery, callback_data: PagesCallbackFactory):
+    page = int(callback_data.page)
     category_one = category_list[page]
     keyboard = get_pagination_keyboard(page=page, category_list=category_list)
 
