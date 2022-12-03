@@ -118,7 +118,6 @@ async def all_stickers_pagination_callback_handler(callback: types.CallbackQuery
                                   reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
 
     paginate_inline_kb_builder = InlineKeyboardBuilder()
-
     paginate_list = get_pagination_list(len(stickers_titles))
     for num, page in enumerate(paginate_list):
         activ = "👉" if num == callback_data.page else ""
@@ -128,8 +127,7 @@ async def all_stickers_pagination_callback_handler(callback: types.CallbackQuery
                                                                 end=page[1],
                                                                 page=num).pack()))
     paginate_inline_kb_builder.adjust(8)
-    await bot.send_message(callback.message.from_user.id,
-                           "...",
+    await bot.send_message(callback.message.from_user.id, "...",
                            reply_markup=paginate_inline_kb_builder.as_markup(resize_keyboard=True))
 
     await callback.answer()
