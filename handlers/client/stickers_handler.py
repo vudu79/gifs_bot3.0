@@ -127,7 +127,7 @@ async def all_stickers_pagination_callback_handler(callback: types.CallbackQuery
     #                            .row(InlineKeyboardButton("Продолжаем", callback_data="all_stick__yet"),
     #                                 InlineKeyboardButton("Надоело", callback_data="all_stick__enough")))
 
-    await collback.answer()
+    await callback.answer()
 
 
 @router.message(FSMStickersSearch.word)
