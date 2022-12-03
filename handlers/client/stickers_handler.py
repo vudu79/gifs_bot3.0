@@ -164,17 +164,22 @@ async def load_word_search_stickers(message: Message, state: FSMContext):
                 for x in range(0, 3):
                     media.append(types.InputMediaPhoto(type='photo', media=img_list[x]))
             try:
-                if len(media.media) > 0:
-                    print(f'Медиа группа - {len(media.media)} ')
+                if len(media) > 0:
+                    print(f'Медиа группа - {len(media)} ')
 
                     await bot.send_media_group(message.from_user.id, media=media)
+
+                    builder = InlineKeyboardBuilder()
+                    builder.row(InlineKeyboardButton(text="Подробней / Добавить в телеграм",
+                                                     url=f'{stickers_dict[name]["url"]}'))
+
                     await bot.send_message(message.from_user.id, f'{bold_name}',
                                            parse_mode="HTML",
-                                           reply_markup=InlineKeyboardMarkup(row_width=1).add(
-                                               InlineKeyboardButton(
-                                                   text="Подробней / Добавить в телеграм",
-                                                   url=f'{stickers_dict[name]["url"]}')))
+                                           reply_markup=builder.as_markup(resize_keyboard=True))
             except Exception as ee:
+                await bot.send_message(message.from_user.id,
+                                       "<em>Извините, нашел какую-то чепуху, показывать не буду...</em>",
+                                       parse_mode="HTML")
                 print(f"Что то пошло не так {ee}")
                 with open("static/bad_pack1.txt", 'a') as file:
                     file.write(name)
@@ -223,7 +228,9 @@ async def load_count_random_stickers(message: Message, state: FSMContext):
                                            reply_markup=builder.as_markup(resize_keyboard=True))
                     count = count + 1
             except Exception as ee:
-                await bot.send_message(message.from_user.id, "<em>Извините, нашел какую-то чепуху, показывать не буду...</em>", parse_mode="HTML")
+                await bot.send_message(message.from_user.id,
+                                       "<em>Извините, нашел какую-то чепуху, показывать не буду...</em>",
+                                       parse_mode="HTML")
                 print(f"Что то пошло не так в рандомных паках --- {ee}")
                 with open("static/bad_pack.txt", 'a') as file:
                     file.write(random_sticker_dict["name"])
