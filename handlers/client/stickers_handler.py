@@ -74,6 +74,7 @@ async def show_all_stickers_handler(message: Message):
                                                                 start=page[0],
                                                                 end=page[1],
                                                                 page=num).pack()))
+
     paginate_inline_kb_builder.adjust(8)
 
     for x in range(0, 105):
