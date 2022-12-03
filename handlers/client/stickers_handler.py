@@ -76,7 +76,7 @@ async def show_all_stickers_handler(message: Message):
                                                                 page=num).pack()))
     paginate_inline_kb_builder.adjust(8)
 
-    for x in range(0, 88):
+    for x in range(0, 105):
         stickers_titles_inline_builder.add(
             InlineKeyboardButton(text=f"{x} - {stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
     stickers_titles_inline_builder.adjust(3)
