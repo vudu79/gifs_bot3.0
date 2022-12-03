@@ -23,7 +23,7 @@ class FSMStickersSearch(StatesGroup):
     count = State()
 
 
-class StickersPaginateCallback(CallbackData, prefix="my"):
+class StickersPaginateCallback(CallbackData):
     start: int
     end: int
     focus: bool
