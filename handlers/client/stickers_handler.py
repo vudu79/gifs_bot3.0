@@ -217,13 +217,12 @@ async def load_count_random_stickers(message: Message, state: FSMContext):
                     await bot.send_message(message.from_user.id,
                                            f'Стикеры <b>"{random_sticker_dict["name"]}"</b>',
                                            parse_mode="HTML",
-                                           reply_markup=InlineKeyboardMarkup(row_width=1).add(
-                                               InlineKeyboardButton(
-                                                   text="Добавить в телеграм",
-                                                   url=f'{random_sticker_dict["url"]}')))
+                                           reply_markup=InlineKeyboardMarkup(keyboards=[InlineKeyboardButton(
+                                               text="Добавить в телеграм",
+                                               url=f'{random_sticker_dict["url"]}')]))
                     count = count + 1
             except Exception as ee:
-                print(f"Что то пошло не так {ee}")
+                print(f"Что то пошло не так в рандомных паках --- {ee}")
                 with open("static/bad_pack.txt", 'a') as file:
                     file.write(random_sticker_dict["name"])
         # await bot.send_message(message.from_user.id, "Что то пошло не так...")
