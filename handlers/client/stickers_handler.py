@@ -23,7 +23,7 @@ class FSMStickersSearch(StatesGroup):
     count = State()
 
 
-class StickersPaginateCallback(CallbackData):
+class StickersPaginateCallback(CallbackData, prefix="my"):
     start: int
     end: int
     focus: bool
@@ -68,6 +68,10 @@ async def show_all_stickers_handler(message: Message):
 
     paginate_list = get_pagination_list(len(stickers_titles))
     for num, page in enumerate(paginate_list):
+        print(page[0])
+        print(page[1])
+        print("-----")
+
         activ = "👉" if num == 1 else ""
         paginate_inline_kb_builder.add(InlineKeyboardButton(text=f'{activ}{num}',
                                                             callback_data=StickersPaginateCallback(
@@ -102,9 +106,10 @@ async def show_all_stickers_handler(message: Message):
 
 
 @router.callback_query(StickersPaginateCallback.filter())
-async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery,
+async def all_stickers_pagination_callback_handler(callback: types.CallbackQuery,
                                                    callback_data: StickersPaginateCallback):
-    bot.send_message(collback.from_user.id, callback_data.start)
+    print(callback_data)
+    bot.send_message(callback.from_user.id, callback_data.start)
     # @dp.callback_query_handler(Text(startswith="all_stick__"))z
     # async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery):
     # global stickers_names_gen
