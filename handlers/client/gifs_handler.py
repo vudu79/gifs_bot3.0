@@ -40,37 +40,47 @@ async def gifs_menu_show_handler(message: Message):
 
 @router.message(text="Популярные категории", state=None)
 async def category_index_handler(message: Message):
-    builder = InlineKeyboardBuilder()
-    builder.row(InlineKeyboardButton(text="Все сразу", callback_data="collect_cat__yes"),
-                InlineKeyboardButton(text="По одной", callback_data="collect_cat__no"))
-    await message.answer("Показать все категории или отправлять по одной?",
-                         reply_markup=builder.as_markup(resize_keyboard=True))
+    inline_keyboard_category_builder = InlineKeyboardBuilder()
+    for teg in category_list:
+        inline_keyboard_category_builder.add(
+            InlineKeyboardButton(text=f'{teg["searchterm"]}', callback_data=f'category__{teg["searchterm"]}'))
+    inline_keyboard_category_builder.adjust(3)
+    await message.answer(
+        'В каждой категории по несколько вариантов популярных гифок. Нажмите на любую для просмотра.',
+        reply_markup=inline_keyboard_category_builder.as_markup(resize_keyboard=True))
+    # await collback.answer()
+    # builder = InlineKeyboardBuilder()
+    # builder.row(InlineKeyboardButton(text="Все сразу", callback_data="collect_cat__yes"),
+    #             InlineKeyboardButton(text="По одной", callback_data="collect_cat__no"))
+    # await message.answer("Показать все категории или отправлять по одной?",
+    #                      reply_markup=builder.as_markup(resize_keyboard=True))
 
 
-@router.callback_query(text_startswith="collect_cat__")
-async def show_type_category_callback_handler(collback: CallbackQuery):
-    res = collback.data.split("__")[1]
-    if res == "yes":
-        inline_keyboard_category_builder = InlineKeyboardBuilder()
-        for teg in category_list:
-            # inline_keyboard_category_builder.clean()
-            inline_keyboard_category_builder.add(
-                InlineKeyboardButton(text=f'{teg["searchterm"]}', callback_data=f'category__{teg["searchterm"]}'))
-        inline_keyboard_category_builder.adjust(3)
-        await collback.message.answer(
-            'В каждой категории по несколько вариантов популярных гифок. Нажмите на любую для просмотра.',
-            reply_markup=inline_keyboard_category_builder.as_markup(resize_keyboard=True))
-        await collback.answer()
-    else:
-        if res == "no":
-            category_one = category_list[0]
-            keyboard_builder = get_pagination_keyboard(category_list=category_list)  # Page: 0
-
-            await bot.send_animation(
-                chat_id=collback.message.chat.id,
-                animation=category_one["image"],
-                reply_markup=keyboard_builder.as_markup(resize_keyboard=True)
-            )
+#
+# @router.callback_query(text_startswith="collect_cat__")
+# async def show_type_category_callback_handler(collback: CallbackQuery):
+#     res = collback.data.split("__")[1]
+#     if res == "yes":
+#         inline_keyboard_category_builder = InlineKeyboardBuilder()
+#         for teg in category_list:
+#             # inline_keyboard_category_builder.clean()
+#             inline_keyboard_category_builder.add(
+#                 InlineKeyboardButton(text=f'{teg["searchterm"]}', callback_data=f'category__{teg["searchterm"]}'))
+#         inline_keyboard_category_builder.adjust(3)
+#         await collback.message.answer(
+#             'В каждой категории по несколько вариантов популярных гифок. Нажмите на любую для просмотра.',
+#             reply_markup=inline_keyboard_category_builder.as_markup(resize_keyboard=True))
+#         await collback.answer()
+#     else:
+#         if res == "no":
+#             category_one = category_list[0]
+#             keyboard_builder = get_pagination_keyboard(category_list=category_list)  # Page: 0
+#
+#             await bot.send_animation(
+#                 chat_id=collback.message.chat.id,
+#                 animation=category_one["image"],
+#                 reply_markup=keyboard_builder.as_markup(resize_keyboard=True)
+#             )
 
 
 @router.callback_query(PagesCallbackFactory.filter())
