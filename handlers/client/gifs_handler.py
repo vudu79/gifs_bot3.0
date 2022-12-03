@@ -43,7 +43,7 @@ async def category_index_handler(message: Message):
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text="Все сразу", callback_data="collect_cat__yes"),
                 InlineKeyboardButton(text="По одной", callback_data="collect_cat__no"))
-    await message.answer("Показать все категории или по одной, но с превью?",
+    await message.answer("Показать все категории или отправлять по одной?",
                          reply_markup=builder.as_markup(resize_keyboard=True))
 
 

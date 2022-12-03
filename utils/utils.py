@@ -88,7 +88,7 @@ def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineK
     has_next_page = len(category_list) > page + 1
 
     if page != 0:
-        keyboard_builder.add(
+        keyboard_builder.row(
             InlineKeyboardButton(
                 text="👈",
                 callback_data=PagesCallbackFactory(page=page - 1,
@@ -96,7 +96,7 @@ def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineK
             )
         )
 
-    keyboard_builder.add(
+    keyboard_builder.row(
         InlineKeyboardButton(
             text=f'Показать все из "{str.capitalize(category_list[page]["searchterm"])}"',
             # callback_data=f'category__{category_list[page]["searchterm"]}"'
@@ -106,14 +106,14 @@ def get_pagination_keyboard(page: int = 0, category_list: any = None) -> InlineK
     )
 
     if has_next_page:
-        keyboard_builder.add(
+        keyboard_builder.row(
             InlineKeyboardButton(
                 text="👉",
                 callback_data=PagesCallbackFactory(page=page + 1,
                                                    category_name=f'{category_list[page + 1]["searchterm"]}').pack()
             )
         )
-    keyboard_builder.adjust(3)
+    # keyboard_builder.adjust(3)
     return keyboard_builder
 
 
