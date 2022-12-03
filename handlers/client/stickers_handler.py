@@ -78,7 +78,7 @@ async def show_all_stickers_handler(message: Message):
 
     for x in range(0, 199):
         stickers_titles_inline_builder.add(
-            InlineKeyboardButton(text=f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
+            InlineKeyboardButton(text=f"{x} - {stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
     stickers_titles_inline_builder.adjust(3)
     await message.answer(f"Всего найдено - {len(stickers_dict.keys())}. На странице по 200 шт.",
                          reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
@@ -112,7 +112,7 @@ async def all_stickers_pagination_callback_handler(callback: types.CallbackQuery
 
     for x in range(callback_data.start, callback_data.end):
         stickers_titles_inline_builder.add(
-            InlineKeyboardButton(text=f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
+            InlineKeyboardButton(text=f"{x} - {stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
     stickers_titles_inline_builder.adjust(3)
     await callback.message.answer(f"Страница - {callback_data.page}",
                                   reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
