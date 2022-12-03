@@ -79,9 +79,9 @@ async def show_all_stickers_handler(message: Message):
 
     for x in range(0, 99):
         stickers_titles_inline_builder.add(
-            InlineKeyboardButton(text=f"{x} - {stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
+            InlineKeyboardButton(text=f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
     stickers_titles_inline_builder.adjust(3)
-    await message.answer(f"Всего найдено - {len(stickers_dict.keys())}. На странице по 200 шт.",
+    await message.answer(f"Всего найдено - {len(stickers_dict.keys())}. На странице по 100 шт.",
                          reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
 
     await bot.send_message(message.from_user.id,
@@ -113,7 +113,7 @@ async def all_stickers_pagination_callback_handler(callback: types.CallbackQuery
 
     for x in range(callback_data.start, callback_data.end):
         stickers_titles_inline_builder.add(
-            InlineKeyboardButton(text=f"{x} - {stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
+            InlineKeyboardButton(text=f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
     stickers_titles_inline_builder.adjust(3)
     await callback.message.answer(f"Страница - {callback_data.page}",
                                   reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
@@ -209,9 +209,7 @@ async def load_count_random_stickers(message: Message, state: FSMContext):
                     media.append(types.InputMediaPhoto(type='photo', media=img_list[x]))
 
             try:
-                if len(media.media) > 0:
-                    print(f'Медиа группа - {len(media.media)} ')
-
+                if len(media) > 0:
                     await bot.send_message(message.from_user.id, f'<em>{random.choice(phraze_list)}</em>',
                                            parse_mode="HTML")
 
