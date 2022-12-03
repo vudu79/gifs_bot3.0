@@ -67,7 +67,7 @@ async def show_type_category_callback_handler(collback: CallbackQuery):
             keyboard_builder = get_pagination_keyboard(category_list=category_list)  # Page: 0
 
             await bot.send_animation(
-                chat_id=collback.message.from_user.id,
+                chat_id=collback.message.chat.id,
                 animation=category_one["image"],
                 reply_markup=keyboard_builder.as_markup(resize_keyboard=True)
             )
