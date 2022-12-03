@@ -26,7 +26,7 @@ class FSMStickersSearch(StatesGroup):
 class StickersPaginateCallback(CallbackData, prefix="my"):
     start: int
     end: int
-    focus: bool
+    page: int
 
 
 # stickers_paginate_callback = CallbackData('action', 'start_end')
@@ -68,16 +68,12 @@ async def show_all_stickers_handler(message: Message):
 
     paginate_list = get_pagination_list(len(stickers_titles))
     for num, page in enumerate(paginate_list):
-        print(page[0])
-        print(page[1])
-        print("-----")
-
         activ = "👉" if num == 1 else ""
         paginate_inline_kb_builder.add(InlineKeyboardButton(text=f'{activ}{num}',
                                                             callback_data=StickersPaginateCallback(
                                                                 start=page[0],
                                                                 end=page[1],
-                                                                focus=False).pack()))
+                                                                page=num).pack()))
     paginate_inline_kb_builder.adjust(8)
 
     for x in range(0, 199):
@@ -88,7 +84,8 @@ async def show_all_stickers_handler(message: Message):
                          reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
 
     await bot.send_message(message.from_user.id,
-                           "и еще немного страниц...", reply_markup=paginate_inline_kb_builder.as_markup(resize_keyboard=True))
+                           "и еще немного страниц...",
+                           reply_markup=paginate_inline_kb_builder.as_markup(resize_keyboard=True))
 
     # global stickers_names_gen
     # for x in range(0, 50):
@@ -108,24 +105,32 @@ async def show_all_stickers_handler(message: Message):
 @router.callback_query(StickersPaginateCallback.filter())
 async def all_stickers_pagination_callback_handler(callback: types.CallbackQuery,
                                                    callback_data: StickersPaginateCallback):
-    print(callback_data)
-    bot.send_message(callback.from_user.id, callback_data.start)
-    # @dp.callback_query_handler(Text(startswith="all_stick__"))z
-    # async def all_stickers_pagination_callback_handler(collback: types.CallbackQuery):
-    # global stickers_names_gen
-    # if collback.data.split("__")[1] == "yet":
-    #     all_names_inline_menu.clean()
-    #     for x in range(0, 50):
-    #         name = next(stickers_names_gen)
-    #         all_names_inline_menu.add(InlineKeyboardButton(f'{name}', url=f'{stickers_dict[name]["url"]}'))
-    #
-    #     await bot.send_message(collback.from_user.id,
-    #                            f"Еще 50 шт...",
-    #                            reply_markup=all_names_inline_menu)
-    #     await bot.send_message(collback.from_user.id, "{Хватит?}",
-    #                            reply_markup=InlineKeyboardMarkup(row_width=2)
-    #                            .row(InlineKeyboardButton("Продолжаем", callback_data="all_stick__yet"),
-    #                                 InlineKeyboardButton("Надоело", callback_data="all_stick__enough")))
+    stickers_dict = static_media.get_stickers_dict()
+    stickers_titles = list(stickers_dict.keys())
+
+    stickers_titles_inline_builder = InlineKeyboardBuilder()
+
+    for x in range(callback_data.start, callback_data.end):
+        stickers_titles_inline_builder.add(
+            InlineKeyboardButton(text=f"{stickers_titles[x]}", url=f'{stickers_dict[stickers_titles[x]]["url"]}'))
+    stickers_titles_inline_builder.adjust(3)
+    await callback.message.answer(f"Страница - {callback_data.page}",
+                                  reply_markup=stickers_titles_inline_builder.as_markup(resize_keyboard=True))
+
+    paginate_inline_kb_builder = InlineKeyboardBuilder()
+
+    paginate_list = get_pagination_list(len(stickers_titles))
+    for num, page in enumerate(paginate_list):
+        activ = "👉" if num == callback_data.page else ""
+        paginate_inline_kb_builder.add(InlineKeyboardButton(text=f'{activ}{num}',
+                                                            callback_data=StickersPaginateCallback(
+                                                                start=page[0],
+                                                                end=page[1],
+                                                                page=num).pack()))
+    paginate_inline_kb_builder.adjust(8)
+    await bot.send_message(callback.message.from_user.id,
+                           "...",
+                           reply_markup=paginate_inline_kb_builder.as_markup(resize_keyboard=True))
 
     await callback.answer()
 
