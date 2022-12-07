@@ -40,13 +40,13 @@ class StaticMedia:
         return self.calendar_dict
 
 
-# with open('calendar_storage.json', 'r', encoding='utf-8') as f:
+# with open('calendar_storage.files', 'r', encoding='utf-8') as f:
 #     js = f.read()
 
-# calendar_storage = json.loads(js)
+# calendar_storage = files.loads(js)
 
-# "static/stickers_tlgrm.json"
-# 'calendar.json'
+# "static/stickers_tlgrm.files"
+# 'calendar.files'
 
 # def get_stickers(count: int, massage: types.Message, img_list: list):
 #     media = types.MediaGroup()
