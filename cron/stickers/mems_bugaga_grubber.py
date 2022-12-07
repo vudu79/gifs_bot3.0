@@ -77,7 +77,7 @@ def main():
             logging.error(f"Проблеммы с requests на странице со сборниками мемов - {e}")
 
     try:
-        with open("files/bugaga_memes.json", "w", encoding="utf-8") as f:
+        with open("../../static/bugaga_memes.json", "w", encoding="utf-8") as f:
             json.dump(memes_list, f, indent=4, ensure_ascii=False)
         logging.info(f'записал в файл {len(memes_list)} записей')
     except Exception as ee:

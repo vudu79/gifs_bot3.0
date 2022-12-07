@@ -1,10 +1,9 @@
 import json
+from random import shuffle
 
 from aiogram.dispatcher.filters.callback_data import CallbackData
+from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-
-from create_bot import stickers_list
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 phraze_list = ["Секундочку, склеиваю фотки...", "минутку, ищу в интернетах...)", "Подождите, собираю пазл...",
                "Надо подождать, вспоминаю, что надо было сделать...", "Подождите,выгружаю по частям...",
@@ -15,20 +14,29 @@ class StaticMedia:
     sticker_list: list
     sticker_dict: dict
     calendar_dict: dict
+    memes_list: list
     stickers_url: str
     calendar_url: str
+    memes_url: str
 
-    def __init__(self, stickers_url: str, calendar_url: str):
+    def __init__(self, stickers_url: str, calendar_url: str, memes_url: str):
         self.stickers_url = stickers_url
         self.calendar_url = calendar_url
+        self.memes_url = memes_url
+
         with open(self.stickers_url, "r", encoding="utf-8") as file:
             self.sticker_list = json.load(file)
         self.sticker_dict = {}
         for pack in self.sticker_list:
             self.sticker_dict[pack["name"]] = pack
+
         with open(self.calendar_url, 'r', encoding='utf-8') as f:
             js = f.read()
         self.calendar_dict = json.loads(js)
+
+        with open(self.memes_url, "r", encoding="utf-8") as file:
+            self.memes_list = json.load(file)
+            shuffle(self.memes_list)
 
     def get_stickers_list(self):
         return self.sticker_list
@@ -38,6 +46,9 @@ class StaticMedia:
 
     def get_calendar_dict(self):
         return self.calendar_dict
+
+    def get_memes_list(self):
+        return self.memes_list
 
 
 # with open('calendar_storage.files', 'r', encoding='utf-8') as f:

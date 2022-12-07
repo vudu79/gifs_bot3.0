@@ -31,7 +31,7 @@ reply_keyboard_cards_builder = ReplyKeyboardBuilder()
 reply_keyboard_cards_builder.row(today_btn, calendar_btn).row(main_menu_button)
 
 random_btn = KeyboardButton(text='Случайные мемасы')
-trend_btn = KeyboardButton(text='В тренде')
+trend_btn = KeyboardButton(text='Свежие и не очень мемы')
 reply_keyboard_mems_builder = ReplyKeyboardBuilder()
 reply_keyboard_mems_builder.row(random_btn, trend_btn).row(main_menu_button)
 
