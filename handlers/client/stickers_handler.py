@@ -13,7 +13,7 @@ from keyboards import reply_keyboard_stickers_builder
 
 static_media = StaticMedia(stickers_url="static/stickers_tlgrm.json",
                            calendar_url='calendar.json',
-                           memes_url="static/all_memes.json")
+                           memes_url="static/half_memes.json")
 
 
 class FSMStickersRandom(StatesGroup):
