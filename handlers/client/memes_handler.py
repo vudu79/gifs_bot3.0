@@ -12,7 +12,8 @@ from keyboards.slient_kb import reply_keyboard_mems_builder
 from utils import StaticMedia, get_pagination_list, phraze_list
 from keyboards import reply_keyboard_stickers_builder
 
-static_media = StaticMedia(stickers_url="static/stickers_tlgrm.files", calendar_url='calendar.files')
+static_media = StaticMedia(stickers_url="static/stickers_tlgrm.files", calendar_url='calendar.files',
+                           memes_url="static/half_memes.json")
 
 
 router = Router()
