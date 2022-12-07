@@ -9,7 +9,8 @@ from keyboards import reply_keyboard_cards_builder
 
 router = Router()
 
-static_media = StaticMedia(stickers_url="static/stickers_tlgrm.files", calendar_url='calendar.files')
+static_media = StaticMedia(stickers_url="static/stickers_tlgrm.json", calendar_url='calendar.json',
+                           memes_url="static/all_memes.json")
 
 
 @router.message(text="Открытки", state=None)
