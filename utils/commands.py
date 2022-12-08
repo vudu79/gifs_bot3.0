@@ -17,25 +17,21 @@ async def set_commands(bot: Bot):
             description='Сбросить'
         ),
         BotCommand(
-            command='Мемы',
-            description='Поиск мемов в интернете'
+            command='Memes',
+            description='Поиск мемов'
         ),
         BotCommand(
-            command='Гифки',
-            description='Поиск гиф анимаций и картинок'
+            command='Gifs',
+            description='Поиск гифок'
         ),
         BotCommand(
-            command='Стикеры',
-            description='Неприлично много стикеров'
+            command='Stickers',
+            description='Много стикеров'
         ),
         BotCommand(
-            command='Открытки',
-            description='Открытки на популярные праздники'
+            command='Cards',
+            description='Открытки на праздники'
         ),
-
-
-
-
     ]
 
     await bot.set_my_commands(commands, BotCommandScopeDefault())

@@ -23,7 +23,7 @@ async def stickers_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_mems_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Command(commands='Гифки'))
+@router.message(Command(commands='Мемы'))
 async def stickers_menu_show_handler(message: Message):
     await message.answer("Более 900000 мемов!!!",
                          reply_markup=reply_keyboard_mems_builder.as_markup(resize_keyboard=True))
