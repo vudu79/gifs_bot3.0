@@ -17,19 +17,19 @@ async def set_commands(bot: Bot):
             description='Сбросить'
         ),
         BotCommand(
-            command='Memes',
+            command='memes',
             description='Поиск мемов'
         ),
         BotCommand(
-            command='Gifs',
+            command='gifs',
             description='Поиск гифок'
         ),
         BotCommand(
-            command='Stickers',
+            command='stickers',
             description='Много стикеров'
         ),
         BotCommand(
-            command='Cards',
+            command='cards',
             description='Открытки на праздники'
         ),
     ]
