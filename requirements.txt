@@ -5,10 +5,9 @@ requests==2.28.1
 
 
 
-CREATE TABLE users (
-user_id BIGINT PRIMARY KEY,
-user_name TEXT,
-chat_id TEXT,
-user_email TEXT,
-login_time TEXT
-);
+# CREATE TABLE users (
+# user_id BIGINT PRIMARY KEY,
+# user_name TEXT,
+# chat_id BIGINT,
+# login_time TEXT
+# );
