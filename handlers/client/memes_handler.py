@@ -11,10 +11,7 @@ from bot import bot
 from keyboards.slient_kb import reply_keyboard_mems_builder
 from utils import StaticMedia, get_pagination_list, phraze_list
 from keyboards import reply_keyboard_stickers_builder
-
-static_media = StaticMedia(stickers_url="static/stickers_tlgrm.json", calendar_url='calendar.json',
-                           memes_url="static/half_memes.json")
-
+from bot import static_media
 
 router = Router()
 

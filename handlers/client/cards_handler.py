@@ -6,11 +6,10 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot import bot
 from utils import func_chunk, phraze_list, StaticMedia
 from keyboards import reply_keyboard_cards_builder
+from bot import static_media
 
 router = Router()
 
-static_media = StaticMedia(stickers_url="static/stickers_tlgrm.json", calendar_url='calendar.json',
-                           memes_url="static/half_memes.json")
 
 
 @router.message(text="Открытки", state=None)

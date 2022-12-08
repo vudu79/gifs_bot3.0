@@ -10,10 +10,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot import bot
 from utils import StaticMedia, get_pagination_list, phraze_list
 from keyboards import reply_keyboard_stickers_builder
+from bot import static_media
 
-static_media = StaticMedia(stickers_url="static/stickers_tlgrm.json",
-                           calendar_url='calendar.json',
-                           memes_url="static/half_memes.json")
 
 
 class FSMStickersRandom(StatesGroup):
