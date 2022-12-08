@@ -18,7 +18,7 @@ async def cards_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_cards_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Command(commands='Открытки'))
+@router.message(Command(commands='cards'))
 async def cards_menu_show_handler(message: Message):
     await message.answer("Более 10000 открыток на праздники!!!",
                          reply_markup=reply_keyboard_cards_builder.as_markup(resize_keyboard=True))

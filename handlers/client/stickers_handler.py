@@ -40,7 +40,7 @@ async def stickers_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_stickers_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Command(commands='Стикеры'))
+@router.message(Command(commands='stickers'))
 async def stickers_menu_show_handler(message: Message):
     await message.answer("Более 25000 стикер-паков!!! Найти бы только нужный((",
                          reply_markup=reply_keyboard_stickers_builder.as_markup(resize_keyboard=True))

@@ -33,7 +33,7 @@ async def gifs_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_gifs_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(Command(commands='Гифки'))
+@router.message(Command(commands='gifs'))
 async def gifs_menu_show_handler(message: Message):
     await message.answer("Помогу найти гифки рызными способами))",
                          reply_markup=reply_keyboard_gifs_builder.as_markup(resize_keyboard=True))
