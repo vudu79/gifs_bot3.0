@@ -161,7 +161,7 @@ async def load_word_search_stickers(message: Message, state: FSMContext):
 
             if len(img_list) <= 4:
                 for img in img_list:
-                    media.append(types.InputMediaPhoto(type='photo', media=img))
+                    media.append(types.InputInputMediaPhoto(type='photo', media=img))
             else:
                 for x in range(0, 3):
                     media.append(types.InputMediaPhoto(type='photo', media=img_list[x]))
