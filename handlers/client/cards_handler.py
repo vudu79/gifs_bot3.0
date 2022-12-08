@@ -1,6 +1,7 @@
 import random
 from datetime import datetime
 from aiogram import Router, types
+from aiogram.dispatcher.filters import Command
 from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot import bot
@@ -11,15 +12,14 @@ from bot import static_media
 router = Router()
 
 
-
-@router.message(text="Открытки", state=None)
+@router.message(text="Открытки")
 async def cards_menu_show_handler(message: Message):
-    # await message.answer(message.from_user.id,
-    #                        "Более 10000 открыток на праздники!!!",
-    #                        reply_markup=InlineKeyboardMarkup(row_width=2).row(
-    #                            InlineKeyboardButton(text="Сегодня", callback_data="holiday__today_"),
-    #                            InlineKeyboardButton(text="Календарь", callback_data="holiday__calendar_")))
-    # await message.delete_reply_markup()
+    await message.answer("Более 10000 открыток на праздники!!!",
+                         reply_markup=reply_keyboard_cards_builder.as_markup(resize_keyboard=True))
+
+
+@router.message(Command(commands='Открытки'))
+async def cards_menu_show_handler(message: Message):
     await message.answer("Более 10000 открыток на праздники!!!",
                          reply_markup=reply_keyboard_cards_builder.as_markup(resize_keyboard=True))
 

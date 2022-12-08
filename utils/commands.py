@@ -15,10 +15,23 @@ async def set_commands(bot: Bot):
         BotCommand(
             command='cancel',
             description='Сбросить'
-        )
-
-
-
+        ),
+        BotCommand(
+            command='Мемы',
+            description='Поиск мемов в интернете'
+        ),
+        BotCommand(
+            command='Гифки',
+            description='Поиск гиф анимаций и картинок'
+        ),
+        BotCommand(
+            command='Стикеры',
+            description='Неприлично много стикеров'
+        ),
+        BotCommand(
+            command='Открытки',
+            description='Открытки на популярные праздники'
+        ),
 
 
 

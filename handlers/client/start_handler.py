@@ -9,7 +9,7 @@ from datetime import datetime
 router = Router()
 
 
-@router.message(commands=['start', 'help'])
+@router.message(commands=['start'])
 async def start_handler(message: Message, request: Request):
     user_login_time = str(datetime.utcnow().time())
     await request.add_user(message.from_user.id, message.from_user.first_name, message.chat.id, user_login_time)
