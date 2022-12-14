@@ -34,7 +34,7 @@ async def stickers_menu_show_handler(message: Message):
 async def stickers_random_handler(message: Message, request: Request):
     count_mems = await request.select_count_memes()
     await message.answer(
-        f"Фото и анимационные мемы из 15 источников в интернете. Все свалено в одну кучу и хорошо перемешано. Сейчас в куче <b>{count_mems} мемов</b>. Можно тыкать пока палец не отвалится))",
+        f"Фото и анимационные мемы из 15 источников в интернете. Все свалено в одну кучу и хорошо перемешано. Сейчас в куче <b>{count_mems[0]} мемов</b>. Можно тыкать пока палец не отвалится))",
         reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
 
 
