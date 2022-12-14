@@ -41,27 +41,28 @@ async def stickers_random_handler(message: Message, request: Request):
 @router.message(text_startswith ='🔀 ')
 async def stickers_random_handler(message: Message, request: Request):
     memes_list = await request.select_all_memes()
-
-
     mess = message.text
-
     if mess.endswith('1️⃣'):
         mem_url = random.choice(memes_list)
+        await message.delete()
         await bot.send_photo(message.from_user.id, mem_url[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
 
     if mess.endswith('3️⃣'):
         mem_url = random.choices(memes_list, k=3)
+        await message.delete()
         for x in mem_url:
             await bot.send_photo(message.from_user.id, x[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
 
 
     if mess.endswith('5️⃣'):
         mem_url = random.choices(memes_list, k=5)
+        await message.delete()
         for x in mem_url:
             await bot.send_photo(message.from_user.id, x[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
 
     if mess.endswith('🔟'):
         mem_url = random.choices(memes_list, k=10)
+        await message.delete()
         for x in mem_url:
             await bot.send_photo(message.from_user.id, x[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
 
