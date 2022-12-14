@@ -18,3 +18,10 @@ class Request:
         cur = await self.connector.execute(query)
         records = await cur.fetchall()
         return records
+
+
+    async def select_count_memes(self):
+        query = f"SELECT count(*) FROM memes"
+        cur = await self.connector.execute(query)
+        count = await cur.fetchone()
+        return count

@@ -35,6 +35,13 @@ trend_btn = KeyboardButton(text='Свежие и не очень мемы')
 reply_keyboard_mems_builder = ReplyKeyboardBuilder()
 reply_keyboard_mems_builder.row(random_btn, trend_btn).row(main_menu_button)
 
+x1_btn = KeyboardButton(text='&#49;&#8419;')
+x3_btn = KeyboardButton(text='&#51;&#8419;')
+x5_btn = KeyboardButton(text='&#53;&#8419;')
+x10_btn = KeyboardButton(text='&#128287;')
+reply_keyboard_count_mems_builder = ReplyKeyboardBuilder()
+reply_keyboard_count_mems_builder.row(x1_btn, x3_btn,x5_btn,x10_btn)
+
 random_sticker_btn = KeyboardButton(text='Случайные паки')
 search_sticker_btn = KeyboardButton(text='Поиск по словам')
 search_all_sticker_btn = KeyboardButton(text='Показать все')
