@@ -13,24 +13,27 @@ from keyboards.slient_kb import reply_keyboard_mems_builder
 from utils import StaticMedia, get_pagination_list, phraze_list
 from keyboards import reply_keyboard_stickers_builder
 from bot import static_media
+from utils.db_connect import Request
 
 router = Router()
 
 
 @router.message(text="Мемы")
 async def stickers_menu_show_handler(message: Message):
-    await message.answer("Более 900000 мемов!!!",
+    await message.answer("Много фото-мемов сваленных в одну кучу))",
                          reply_markup=reply_keyboard_mems_builder.as_markup(resize_keyboard=True))
 
 
 @router.message(Command(commands='memes'))
 async def stickers_menu_show_handler(message: Message):
-    await message.answer("Более 900000 мемов!!!",
+    await message.answer("Много фото-мемов сваленных в одну кучу))",
                          reply_markup=reply_keyboard_mems_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(text='Случайные мемасы')
-async def stickers_random_handler(message: Message, state: FSMContext):
+@router.message(text='Случайные из кучи')
+async def stickers_random_handler(message: Message, request: Request):
+    memes_list = request.select_all_memes()
+    print(memes_list)
     await message.answer("Случайные")
 
 
