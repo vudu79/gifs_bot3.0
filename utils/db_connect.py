@@ -1,3 +1,4 @@
+import asyncpg
 import psycopg_pool
 from typing import List
 from asyncpg import Record
@@ -14,5 +15,5 @@ class Request:
 
     async def select_all_memes(self):
         query = f"SELECT * FROM memes"
-        memes_list: List[Record] = await self.connector.fetch(query)
+        memes_list = await self.connector.execute(query).fetchall()
         return memes_list
