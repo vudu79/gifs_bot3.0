@@ -12,7 +12,7 @@ router = Router()
 @router.message()
 async def mat_filter_handler(message: Message):
     if {i.lower().translate(str.maketrans('', '', string.punctuation)) for i in message.text.split(' ')} \
-            .intersection(set(json.load(open('json_mat.files')))) != set():
+            .intersection(set(json.load(open('static/json_mat.json')))) != set():
         await message.reply("Маты запрещены в чате")
         await message.delete()
 
