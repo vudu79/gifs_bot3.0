@@ -33,7 +33,8 @@ async def stickers_menu_show_handler(message: Message):
 @router.message(text='Случайные из кучи')
 async def stickers_random_handler(message: Message, request: Request):
     memes_list = await request.select_all_memes()
-    print(memes_list)
+    mem_url = random.choice(memes_list)
+    bot.send_photo(message.from_user.id, mem_url)
     await message.answer("Случайные")
 
 
