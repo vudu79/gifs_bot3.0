@@ -30,7 +30,7 @@ async def stickers_menu_show_handler(message: Message):
                          reply_markup=reply_keyboard_mems_builder.as_markup(resize_keyboard=True))
 
 
-@router.message(text='Случайные из кучи')
+@router.message(text=['Случайные из кучи', 'Назад в меню мемов'])
 async def stickers_random_handler(message: Message, request: Request):
     count_mems = await request.select_count_memes()
     await message.answer(
