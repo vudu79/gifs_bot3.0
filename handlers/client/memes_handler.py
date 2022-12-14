@@ -38,11 +38,38 @@ async def stickers_random_handler(message: Message, request: Request):
         reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
 
 
-    # memes_list = await request.select_all_memes()
-    # mem_url = random.choices(memes_list)
-    # await bot.send_photo(message.from_user.id, mem_url[0])
-    # print(mem_url[0])
-    # await message.answer("Случайные")
+@router.message(text_startswith ='🔀 ')
+async def stickers_random_handler(message: Message, request: Request):
+    memes_list = await request.select_all_memes()
+
+
+    mess = message.text
+
+    if mess.endswith('1️⃣'):
+        mem_url = random.choice(memes_list)
+        await bot.send_photo(message.from_user.id, mem_url[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
+
+    if mess.endswith('3️⃣'):
+        mem_url = random.choices(memes_list, k=3)
+        for x in mem_url:
+            await bot.send_photo(message.from_user.id, x[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
+
+
+    if mess.endswith('5️⃣'):
+        mem_url = random.choices(memes_list, k=5)
+        for x in mem_url:
+            await bot.send_photo(message.from_user.id, x[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
+
+    if mess.endswith('🔟'):
+        mem_url = random.choices(memes_list, k=10)
+        for x in mem_url:
+            await bot.send_photo(message.from_user.id, x[0], reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
+
+
+    # x1_btn = KeyboardButton(text='🔀 1️⃣')
+    # x3_btn = KeyboardButton(text='🔀 3️⃣')
+    # x5_btn = KeyboardButton(text='🔀 5️⃣')
+    # x10_btn = KeyboardButton(text='🔀 🔟')
 
 
 @router.message(text="Свежие и не очень мемы")
