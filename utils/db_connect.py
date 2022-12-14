@@ -15,5 +15,6 @@ class Request:
 
     async def select_all_memes(self):
         query = f"SELECT * FROM memes"
-        memes_list = await self.connector.execute(query).fetchall()
-        return memes_list
+        cur = await self.connector.execute(query)
+        records = await cur.fetchall()
+        return records
