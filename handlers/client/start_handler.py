@@ -14,7 +14,7 @@ async def start_handler(message: Message, request: Request):
     user_login_time = str(datetime.utcnow().time())
     await request.add_user(message.from_user.id, message.from_user.first_name, message.chat.id, user_login_time)
     await message.answer(f'Привет, {message.from_user.first_name}!')
-    await message.answer('Это бот для поиска полезного и не очень медиа в интернете.',
+    await message.answer('Это бот для поиска полезного и не очень медиа контента',
                          reply_markup=reply_keyboard_main_builder.as_markup(resize_keyboard=True))
     await message.answer("Что будем искать?")
     await message.answer("Тыц 👇")
