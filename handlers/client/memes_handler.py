@@ -4,6 +4,7 @@ from aiogram import Router
 from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.types import Message, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot import bot
 from keyboards.slient_kb import reply_keyboard_mems_builder, reply_keyboard_count_mems_builder, \
@@ -40,7 +41,8 @@ async def stickers_random_handler(message: Message, request: Request):
     if mess.endswith('1️⃣'):
         mem_url = random.choice(memes_list)
         await message.delete()
-        inline_keyboard_source_mem_builder.row(InlineKeyboardButton(text="Источник", url=f'{mem_url[4]}'))
+        inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
+            InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
         await bot.send_photo(message.from_user.id, mem_url[0],
                              reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -48,7 +50,8 @@ async def stickers_random_handler(message: Message, request: Request):
         mem_url = random.choices(memes_list, k=3)
         await message.delete()
         for x in mem_url:
-            inline_keyboard_source_mem_builder.row(InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
+            inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
+                InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
             await bot.send_photo(message.from_user.id, x[0],
                                  reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -56,7 +59,8 @@ async def stickers_random_handler(message: Message, request: Request):
         mem_url = random.choices(memes_list, k=5)
         await message.delete()
         for x in mem_url:
-            inline_keyboard_source_mem_builder.row(InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
+            inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
+                InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
             await bot.send_photo(message.from_user.id, x[0],
                                  reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -64,7 +68,8 @@ async def stickers_random_handler(message: Message, request: Request):
         mem_url = random.choices(memes_list, k=10)
         await message.delete()
         for x in mem_url:
-            inline_keyboard_source_mem_builder.row(InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
+            inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
+                InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
             await bot.send_photo(message.from_user.id, x[0])
 
     # x1_btn = KeyboardButton(text='🔀 1️⃣')
