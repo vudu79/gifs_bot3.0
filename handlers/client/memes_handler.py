@@ -42,7 +42,7 @@ async def stickers_random_handler(message: Message, request: Request):
         mem_url = random.choice(memes_list)
         await message.delete()
         inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
-            InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
+            InlineKeyboardButton(text="Источник", url=f'{mem_url[4]}'))
         await bot.send_photo(message.from_user.id, mem_url[0],
                              reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
