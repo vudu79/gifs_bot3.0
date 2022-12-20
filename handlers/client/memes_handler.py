@@ -39,6 +39,7 @@ async def stickers_random_handler(message: Message, request: Request):
         await message.delete()
         inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
             InlineKeyboardButton(text="Источник", url=f'{mem_url[1]}'))
+        await bot.send_chat_action(message.chat.id, action="upload_photo")
         await bot.send_photo(message.from_user.id, mem_url[0],
                              reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -48,6 +49,7 @@ async def stickers_random_handler(message: Message, request: Request):
         for x in mem_url:
             inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
                 InlineKeyboardButton(text="Источник", url=f'{x[1]}'))
+            await bot.send_chat_action(message.chat.id, action="upload_photo")
             await bot.send_photo(message.from_user.id, x[0],
                                  reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -57,6 +59,7 @@ async def stickers_random_handler(message: Message, request: Request):
         for x in mem_url:
             inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
                 InlineKeyboardButton(text="Источник", url=f'{x[1]}'))
+            await bot.send_chat_action(message.chat.id, action="upload_photo")
             await bot.send_photo(message.from_user.id, x[0],
                                  reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -66,6 +69,7 @@ async def stickers_random_handler(message: Message, request: Request):
         for x in mem_url:
             inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
                 InlineKeyboardButton(text="Источник", url=f'{x[1]}'))
+            await bot.send_chat_action(message.chat.id, action="upload_photo")
             await bot.send_photo(message.from_user.id, x[0],
                                  reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
