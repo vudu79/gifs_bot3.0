@@ -3,15 +3,14 @@ import re
 from aiogram import Router, types
 from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher.filters.callback_data import CallbackData
-from aiogram.dispatcher.filters.text import Text
 from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.dispatcher.fsm.state import StatesGroup, State
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot import bot
-from utils import StaticMedia, get_pagination_list, phraze_list
-from keyboards import reply_keyboard_stickers_builder
 from bot import static_media
+from keyboards import reply_keyboard_stickers_builder
+from utils import get_pagination_list, phraze_list
 
 
 class FSMStickersRandom(StatesGroup):
@@ -166,7 +165,7 @@ async def load_word_search_stickers(message: Message, state: FSMContext):
             try:
                 if len(media) > 0:
                     print(f'Медиа группа - {len(media)} ')
-
+                    await bot.send_chat_action(message.chat.id, action="upload_photo")
                     await bot.send_media_group(message.from_user.id, media=media)
 
                     builder = InlineKeyboardBuilder()
@@ -217,7 +216,7 @@ async def load_count_random_stickers(message: Message, state: FSMContext):
                 if len(media) > 0:
                     await bot.send_message(message.from_user.id, f'<em>{random.choice(phraze_list)}</em>',
                                            parse_mode="HTML")
-
+                    await bot.send_chat_action(message.chat.id, action="upload_photo")
                     await bot.send_media_group(message.from_user.id, media=media)
 
                     builder = InlineKeyboardBuilder()

@@ -1,18 +1,14 @@
-import asyncio
-
 from aiogram import Router
 from aiogram.dispatcher.filters import Command
-from aiogram.dispatcher.filters.callback_data import CallbackData
-from aiogram.dispatcher.filters.text import Text
 from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.dispatcher.fsm.state import StatesGroup, State
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
-
+from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot import bot
 from keyboards import reply_keyboard_gifs_builder, inline_keyboard_lang_builder
 from utils import get_categories_tenor_req, get_pagination_keyboard, get_category_list_tenor_req, PagesCallbackFactory, \
     trend_req, search_req, random_req, translate_req
+
 
 router = Router()
 
@@ -105,6 +101,7 @@ async def show_list_category_colaback_hendler(collback: CallbackQuery):
     gifs_from_tenor_list = get_category_list_tenor_req(res)
     for gif in gifs_from_tenor_list:
         # try:
+        await bot.send_chat_action(callback_user_id, action="upload_video")
         await bot.send_animation(callback_user_id, gif)
         # except RetryAfter as e:
         #     await asyncio.sleep(e.timeout)
@@ -168,6 +165,7 @@ async def load_limit_sm_search(message: Message, state: FSMContext):
     data = await state.get_data()
     list_gifs = search_req(data["subj"], data["limit"], leng_type)
     for gif in list_gifs:
+        await bot.send_chat_action(message.from_user.id, action="upload_video")
         await bot.send_animation(message.from_user.id, gif)
     await message.answer("Сделано, жду команд!")
     await state.clear()
@@ -201,6 +199,7 @@ async def load_subj_sm_random(message: Message, state: FSMContext):
     await state.update_data(subj=message.text)
     await message.answer("Okey, я запомнил. Произвожу поиск ...")
     data = await state.get_data()
+    await bot.send_chat_action(message.chat.id, action="upload_video")
     await bot.send_animation(message.from_user.id, random_req(data['subj']))
     await state.clear()
     await message.answer("Сделано, жду команд!")
@@ -234,6 +233,7 @@ async def load_subj_sm_translate(message: Message, state: FSMContext):
     await state.update_data(phrase=message.text)
     await message.answer("Okey, я запомнил. Произвожу поиск ...")
     data = await state.get_data()
+    await bot.send_chat_action(message.chat.id, action="upload_video")
     await bot.send_animation(message.from_user.id, translate_req(data['phrase']))
     await state.clear()
     await message.answer("Сделано, жду команд!")
@@ -247,6 +247,7 @@ async def trand_api(message: Message):
     # global gifs
     gifs = trend_req()
     for item in gifs.items():
+        await bot.send_chat_action(message.chat.id, action="upload_video")
         await bot.send_animation(message.from_user.id, item[1])
 
     gifs.clear()

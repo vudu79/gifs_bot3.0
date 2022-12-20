@@ -133,6 +133,7 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
                         media.append(types.InputMediaPhoto(type='photo', media=img))
 
                 try:
+                    await bot.send_chat_action(callback_user_id, action="upload_photo")
                     await bot.send_media_group(callback_user_id, media=media)
                 # except RetryAfter as e:
                 #     await asyncio.sleep(e.timeout)
@@ -147,6 +148,7 @@ async def show_event_images_colaback_hendler(collback: types.CallbackQuery):
                 media.append(types.InputMediaPhoto(type='photo', media=img))
 
             try:
+                await bot.send_chat_action(callback_user_id, action="upload_photo")
                 await bot.send_media_group(callback_user_id, media=media)
             # except RetryAfter as e:
             #     await asyncio.sleep(e.timeout)
