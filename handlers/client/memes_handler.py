@@ -14,23 +14,19 @@ from utils.db_connect import Request
 router = Router()
 
 
-@router.message(text="Мемы")
-async def stickers_menu_show_handler(message: Message):
-    await message.answer("Большое количестов визуальных мемов и прикольной графики",
-                         reply_markup=reply_keyboard_mems_builder.as_markup(resize_keyboard=True))
-
-
-@router.message(Command(commands='memes'))
-async def stickers_menu_show_handler(message: Message):
-    await message.answer("Большое количестов визуальных мемов и прикольной графики",
-                         reply_markup=reply_keyboard_mems_builder.as_markup(resize_keyboard=True))
-
-
-@router.message(text=['Случайные из кучи', 'Назад в меню мемов'])
+@router.message(text=['Мемы'])
 async def stickers_random_handler(message: Message, request: Request):
     count_mems = await request.select_count_memes()
     await message.answer(
-        f"Фото и анимационные мемы из 8 источников в интернете. Все свалено в одну кучу и хорошо перемешано. Сейчас в куче <b>{count_mems[0]} мемов</b>. Можно тыкать пока палец не отвалится))",
+        f"Фото-приколы и анимационные мемы из 8 источников в интернете. Все свалено в одну кучу и хорошо перемешано. Сейчас в куче <b>{count_mems[0]} ссылок</b>. Можно тыкать пока палец не отвалится))",
+        reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
+
+
+@router.message(Command(commands='memes'))
+async def stickers_random_handler(message: Message, request: Request):
+    count_mems = await request.select_count_memes()
+    await message.answer(
+        f"Фото-приколы и анимационные мемы из 8 источников в интернете. Все свалено в одну кучу и хорошо перемешано. Сейчас в куче <b>{count_mems[0]} ссылок</b>. Можно тыкать пока палец не отвалится))",
         reply_markup=reply_keyboard_count_mems_builder.as_markup(resize_keyboard=True))
 
 
@@ -42,7 +38,7 @@ async def stickers_random_handler(message: Message, request: Request):
         mem_url = random.choice(memes_list)
         await message.delete()
         inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
-            InlineKeyboardButton(text="Источник", url=f'{mem_url[4]}'))
+            InlineKeyboardButton(text="Источник", url=f'{mem_url[1]}'))
         await bot.send_photo(message.from_user.id, mem_url[0],
                              reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -51,7 +47,7 @@ async def stickers_random_handler(message: Message, request: Request):
         await message.delete()
         for x in mem_url:
             inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
-                InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
+                InlineKeyboardButton(text="Источник", url=f'{x[1]}'))
             await bot.send_photo(message.from_user.id, x[0],
                                  reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -60,7 +56,7 @@ async def stickers_random_handler(message: Message, request: Request):
         await message.delete()
         for x in mem_url:
             inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
-                InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
+                InlineKeyboardButton(text="Источник", url=f'{x[1]}'))
             await bot.send_photo(message.from_user.id, x[0],
                                  reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
@@ -69,8 +65,9 @@ async def stickers_random_handler(message: Message, request: Request):
         await message.delete()
         for x in mem_url:
             inline_keyboard_source_mem_builder = InlineKeyboardBuilder().row(
-                InlineKeyboardButton(text="Источник", url=f'{x[4]}'))
-            await bot.send_photo(message.from_user.id, x[0])
+                InlineKeyboardButton(text="Источник", url=f'{x[1]}'))
+            await bot.send_photo(message.from_user.id, x[0],
+                                 reply_markup=inline_keyboard_source_mem_builder.as_markup(resize_keyboard=True))
 
     # x1_btn = KeyboardButton(text='🔀 1️⃣')
     # x3_btn = KeyboardButton(text='🔀 3️⃣')
